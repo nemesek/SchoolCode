@@ -1,0 +1,8 @@
+Test Plan
+1) Tested try catch block to ensure that in case an input file was not found, the application would still run and all default entries would be set to zero.
+2) Tested with non numeric data.  If a user enters something non numeric then the bad text field entry will be replaced with a zero. For example the input list a,2,3,4,5,6,7,8,9 will not validate and the first entry will be changed from a to zero.
+3) Tested to ensure that no integers less than 1 are valid entries.  If user enters in non-positive integer entry and hit Calculate they will recieve a message indicating all input data must be positive integers.  For example the following lists will fail 1,2,3,4,0,6,7,8,9 and 1,2,3,4,5,6,7,8,-9
+3) Tested to ensure that all input integers were distinct.  For example the entry 1,1,2,3,4,5,6,7,8 will display a message to user that all integers must be unique
+4) Tested 2,7,6,9,5,1,4,3,8 to ensure that it successfully validated the Magic Square. 
+5) Tested 8,1,6,3,5,7,4,9,2 to ensure that it successfully validated the Magic Square.
+6) Tested lists with valid input data but incorrect sums to ensure that summing formulas didn't allow false positives.  For example the list 1,2,3,4,5,6,7,8,9 will fail. 

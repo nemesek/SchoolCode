@@ -1,0 +1,13 @@
+1) (define (f2c x) (* (- x 32) (/ 5 9)))
+
+2) (define (average l) (/ (foldr + 0 l) (length l)))
+
+	;definition for foldr which was used in the average function
+	(define (foldr f i l)
+    		(if (null? l)
+        		i
+        		(f (car l) (foldr f i (cdr l)))))
+
+3) (define (fibonacci n) (if (= n 0) 0 (if (= n 1) 1 (+ (fibonacci (- n 1)) (fibonacci (- n 2))))))
+
+4) (map (lambda (x) (fibonacci x)) '(0 1 2 3 4 5 6 7 8 9))

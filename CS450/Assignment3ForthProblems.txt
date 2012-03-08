@@ -1,0 +1,7 @@
+1) : double dup + ;
+
+2) : cube dup dup dup * * ;
+
+3) : f2c fdup 32e0 f- 5e0 9e0 f/ f* ;
+
+4) : gcd dup 0 = if swap else swap over mod recurse then ;
