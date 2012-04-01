@@ -3,6 +3,7 @@ INSERT INTO Students (FirstName, LastName, Age, School, RiskAssessment, Administ
 INSERT INTO Students (FirstName, LastName, Age, School, RiskAssessment, AdministratorID) VALUES ('Barry', 'Sanders', 16, 'KansasCity KA', 2, 2);
 INSERT INTO Students (FirstName, LastName, Age, School, RiskAssessment, AdministratorID) VALUES ('Earl', 'Campbell', 18, 'Tyler TX', 5, 1);
 
+--Populate Questions table
 INSERT INTO Questions (Type, Value, Test, Color) VALUES ('Radio6', 'How often are you so nervous or anxioius that you can not sit still?', 'SYSR', 'Yellow');
 INSERT INTO Questions (Type, Value, Test, Color) VALUES ('Radio6', 'How often do you feel that you are in control of your life?', 'SYSR', 'Yellow');
 INSERT INTO Questions (Type, Value, Test, Color) VALUES ('Radio6', 'How often do you feel hopeless about your life?', 'SYSR','Yellow');
@@ -20,5 +21,12 @@ INSERT INTO Questions (Type, Value, Test, Color) VALUES ('Radio6', 'How many tim
 INSERT INTO Questions (Type, Value, Test) VALUES ('InputText', 'What did you do? (How did you try to end your life?)', 'SYSR');
 INSERT INTO Questions (Type, Value, Test) VALUES ('Radio2', 'Was the attempt made when using drugs/alcohol?', 'SYSR');
 INSERT INTO Questions (Type, Value, Test, Color) VALUES ('Radio6', 'Compared to when you attempted suicide, how much more emotional pain are you in now?', 'SYSR', 'Green');
+
+
+--Populate Tests table
+INSERT INTO Tests (Type, StudentID) VALUES ('SYSR', 2);
+INSERT INTO Tests (Type, StudentID) VALUES ('SYSR', 1);
+INSERT INTO Tests (Type, StudentID) VALUES ('SYSR', 2);
+INSERT INTO Tests (Type, StudentID) VALUES ('SYSR', 3);
 
 
