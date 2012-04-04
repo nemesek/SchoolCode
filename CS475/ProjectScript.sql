@@ -29,4 +29,14 @@ INSERT INTO Tests (Type, StudentID) VALUES ('SYSR', 1);
 INSERT INTO Tests (Type, StudentID) VALUES ('SYSR', 2);
 INSERT INTO Tests (Type, StudentID) VALUES ('SYSR', 3);
 
+--Populate Answers table
+INSERT INTO Answers (Value, TestID, QuestionID) VALUES ('3', 1, 2);
+INSERT INTO Answers (Value, TestID, QuestionID) VALUES ('3', 1, 3);
+INSERT INTO Answers (Value, TestID, QuestionID) VALUES ('3', 1, 4);
+INSERT INTO Answers (Value, TestID, QuestionID) VALUES ('3', 1, 5);
+INSERT INTO Answers (Value, TestID, QuestionID) VALUES ('3', 1, 6);
+INSERT INTO Answers (Value, TestID, QuestionID) VALUES ('1', 1, 8);
+INSERT INTO Answers (Value, TestID, QuestionID) VALUES ('1', 1, 9);
+INSERT INTO Answers (Value, TestID, QuestionID) VALUES ('1', 1, 10);
+INSERT INTO Answers (Value, TestID, QuestionID) VALUES ('4', 1, 11);
 
