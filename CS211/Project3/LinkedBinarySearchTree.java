@@ -30,16 +30,25 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 		root = new BSTNode<T>(element);
 	}
 	
-	public void printLevels()
+	public String printLevels()
 	{
-		root.level(root);
+		return "";
 	}
 	public String toString()
 	{
-		root.level(root);
+		//root.level(root);
 		return root.toString();
 		//return "from lbst";
 		
+	}
+	public String printOne()
+	{
+		BTNode.level(root);
+		return root.printOne();
+	}
+	public String printTwo()
+	{
+		return root.printTwo();
 	}
 
 	//-----------------------------------------------------------------
@@ -50,7 +59,10 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 		if (root == null)
 			root = new BSTNode<T>(item);
 		else
-			((BSTNode)root).add(item);
+		{
+			//Need to check if item already exists
+			((BSTNode)root).add(item);			
+		}
 	}
 
 	//-----------------------------------------------------------------

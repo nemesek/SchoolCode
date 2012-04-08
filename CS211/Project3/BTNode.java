@@ -15,7 +15,7 @@ public class BTNode<T>
 {
    protected T element;
    protected BTNode<T> left, right;
-   
+   //Added to support level finds for printOne()
    static Hashtable <String, Integer> ht = new Hashtable<String, Integer>();
 	   
    //-----------------------------------------------------------------
@@ -101,7 +101,7 @@ public class BTNode<T>
    //-----------------------------------------------------------------
    public String toString() {
 	   
-	   /*String result = 
+	   String result = 
        "( " + element.toString() +" ";
 	   if (left != null) {
 		   result += left.toString() + " ";
@@ -110,20 +110,25 @@ public class BTNode<T>
 		   result += right.toString() + " ";
 	   }
 	   result += " )";
-	   return result;*/
-	   Hashtable tempHt = ht;
+	   return result;
+	  
+   }
+   
+   public String printOne()
+   {
+	   //Hashtable tempHt = ht;
 	   String result = "";
 	   if(right != null)
 	   {
 		   //result += "-";
-		   result += right.toString();
+		   result += right.printOne();
 
 	   }
 	   
 	   //int level = this.getLevel(this, this.element);
 	   String tempStr = element.toString();
 	   Integer temp = ht.get(tempStr);
-	   System.out.println("Level of element: " + temp);
+	   //System.out.println("Level of element: " + temp);
 	   while(temp > 0)
 	   {
 		   result += "  	";
@@ -134,11 +139,30 @@ public class BTNode<T>
 	   if(left != null)
 	   {
 
-		   result += left.toString();
+		   result += left.printOne();
 
 	   }
 	   return result;
-   } 
+   }
+
+   
+   public String printTwo()
+   {
+	   String result = "";
+	   if(right != null)
+	   {
+		   //result += "";
+		   result += right.printTwo();
+	   }
+	   result += "\n " + element.toString();
+	   if(left != null)
+	   {
+		   //result += "\n ";
+		   result += left.printTwo();
+	   }
+	   return result;
+	   
+   }
  
    public static void level(BTNode n)
    {
@@ -149,12 +173,12 @@ public class BTNode<T>
    {
 	   if(n.getLeft() == null && n.getRight() == null)
 	   {
-		   System.out.println(n.element.toString() + "=>" + i);
+		   //System.out.println(n.element.toString() + "=>" + i);
 		   ht.put(n.element.toString(), i);
 	   }
 	   else
 	   {
-		   System.out.println(n.element.toString() + "=>" + i);
+		   //System.out.println(n.element.toString() + "=>" + i);
 		   ht.put(n.element.toString(), i);
 		   if(n.getLeft() != null)
 			   levelAndNumbers(n.getLeft(), i+1);
