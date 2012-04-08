@@ -1,0 +1,9 @@
+<html>
+<body>
+<form action="GetStudentTests.php" method="post">
+Please enter StudentID: <input type="text" name="student" />
+<intput type="submit"/>
+</form>
+</body>
+</html>
+
