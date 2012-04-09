@@ -51,8 +51,8 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	{
 		String result = "";
 		double height = root.height();
-		double numElements = Math.pow(2, height+1) - 1;
-		int num = (int)numElements;
+		double numElements = Math.pow(2, height+1);
+		int num = (int)numElements + 10;
 		int[] elements = new int[num];
 		Iterator<T> iter  = this.levelorder();
 		int currentLevel = 0;
@@ -63,10 +63,18 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 		while(iter.hasNext())
 		{	
 			  
+			  tempStr = iter.next().toString();
+			  value = Integer.parseInt(tempStr);
+			  current = current.find(value);
+			  if(current == null)
+			  {
+				  current = root;
+				  current = current.find(value);
+			  }
+			  //current = root.find(value);
+			  
 			  if(index == 0)
 			  {
-				  tempStr = iter.next().toString();
-				  value = Integer.parseInt(tempStr);
 				  elements[index] = value;
 			  }
 	    	  if(current.getLeft() != null)
@@ -77,6 +85,7 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	    		  elements[left] = value;	    		  
 	    		  
 	    	  }
+
 	    	  if(current.getRight() != null)
 	    	  {
 	    		  tempStr = current.getRight().element.toString();
@@ -84,25 +93,74 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	    		  int right = 2*(index+1);
 	    		  elements[right] = value;
 	    	  }
-	    	  index = 2*(index+1) + 1;
-	    	  
-	    	  /*int level = root.getLevel(tempStr);
-	    	  if(level == currentLevel)
-	    	  {
-	    		  int value = Integer.parseInt(tempStr);
-	    		  elements[index] = value;
-	    		  index++;
-	    	  }
-	    	  else
-	    	  {
-	    		  int value = Integer.parseInt(tempStr);
-	    		  elements[index] = value;
-	    		  index++;
-	    	  }*/
-			
+	    	  index++;
+		
 		}
-		
-		
+		int previous = 1;
+        for(int i=0; i<numElements; i++)
+        {
+        	
+        	if(i == 0)
+        	{
+        		result += "\n";
+        		int temp = i*2 + 1;
+        		while(temp < numElements && elements[temp] != 0)
+        		{
+        			result +="            ";
+        			temp = temp*2 + 1;
+        		}
+        		result += Integer.toString(elements[i]);
+        	}
+        	else if(i == 1)
+        	{
+        		result += "\n";
+        		previous = 2*i;
+        		int temp = i*2 + 1;
+        		while(temp < numElements && elements[temp] != 0)
+        		{
+        			result +="         ";
+        			temp = temp*2 + 1;
+        		}
+        		result += Integer.toString(elements[i]);
+        		i++;
+        		//result += " ";
+        		temp = i*2 + 1;
+        		while(temp < numElements && elements[temp] != 0)
+        		{
+        			result +="                        ";
+        			temp = temp*2 + 1;
+        		}
+        		result += Integer.toString(elements[i]);
+        		
+        	}
+        	else
+        	{
+        		result += "\n";
+        		previous = 2*previous;
+        		for(int j = 0; j < previous; j++)
+        		{
+        			//result += Integer.toString(elements[i]) + "	";
+        			//i++;
+        			int temp = i*2 + 1;
+        			while(temp < numElements && elements[temp] != 0)
+        			{
+        				result +="          ";
+        				temp = temp*2 + 1;
+        			}
+        			if(elements[i] != 0)
+        			{
+        				result += Integer.toString(elements[i]) + "             ";
+        			}
+        			else
+        			{
+        				result += "\t";
+        			}
+        			i++;
+        		}
+        		
+        	}
+        		
+    	}
 		
 		return result;
 	}
@@ -141,6 +199,7 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	    	  }
  	  
 	      }
+
 	      return result;
 	}
 
