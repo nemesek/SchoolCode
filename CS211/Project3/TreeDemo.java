@@ -12,9 +12,9 @@ public class TreeDemo
 		   lbst.add(19);
 		   lbst.add(22);
 		   lbst.add(24);
-		   //lbst.add(19);
-		   /*lbst.add(35);
-		   lbst.add(23);
+		   lbst.add(19);
+		   lbst.add(35);
+		   /*lbst.add(23);
 		   lbst.add(11);
 		   lbst.add(12);
 		   lbst.add(13);*/
@@ -34,6 +34,8 @@ public class TreeDemo
 	      }*/
 	      System.out.println(lbst.printOne());
 	      System.out.println(lbst.printTwo());
+	      System.out.println(lbst.printLevels());
+	      //String test = lbst.printLevels2();
 	      //System.out.println(lbst.printLevels());
 	      /*Iterator<Integer> i = lbst.printLevels();
 	      while(i.hasNext())

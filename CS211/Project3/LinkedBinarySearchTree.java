@@ -9,6 +9,7 @@
 //import javafoundations.*;
 //import javafoundations.exceptions.*;
 import java.util.*;
+import java.math.*;
 
 public class LinkedBinarySearchTree<T extends Comparable<T>>
 extends LinkedBinaryTree<T> implements BinarySearchTree<T>
@@ -30,10 +31,6 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 		root = new BSTNode<T>(element);
 	}
 	
-	public String printLevels()
-	{
-		return "";
-	}
 	public String toString()
 	{
 		//root.level(root);
@@ -50,6 +47,103 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	{
 		return root.printTwo();
 	}
+	public String printLevels2()
+	{
+		String result = "";
+		double height = root.height();
+		double numElements = Math.pow(2, height+1) - 1;
+		int num = (int)numElements;
+		int[] elements = new int[num];
+		Iterator<T> iter  = this.levelorder();
+		int currentLevel = 0;
+		int index = 0;
+		BTNode current = root;
+		String tempStr = "";
+		int value = 0;
+		while(iter.hasNext())
+		{	
+			  
+			  if(index == 0)
+			  {
+				  tempStr = iter.next().toString();
+				  value = Integer.parseInt(tempStr);
+				  elements[index] = value;
+			  }
+	    	  if(current.getLeft() != null)
+	    	  {
+	    		  tempStr = current.getLeft().element.toString();
+	    		  value = Integer.parseInt(tempStr);
+	    		  int left = index*2 + 1;
+	    		  elements[left] = value;	    		  
+	    		  
+	    	  }
+	    	  if(current.getRight() != null)
+	    	  {
+	    		  tempStr = current.getRight().element.toString();
+	    		  value = Integer.parseInt(tempStr);
+	    		  int right = 2*(index+1);
+	    		  elements[right] = value;
+	    	  }
+	    	  index = 2*(index+1) + 1;
+	    	  
+	    	  /*int level = root.getLevel(tempStr);
+	    	  if(level == currentLevel)
+	    	  {
+	    		  int value = Integer.parseInt(tempStr);
+	    		  elements[index] = value;
+	    		  index++;
+	    	  }
+	    	  else
+	    	  {
+	    		  int value = Integer.parseInt(tempStr);
+	    		  elements[index] = value;
+	    		  index++;
+	    	  }*/
+			
+		}
+		
+		
+		
+		return result;
+	}
+
+	public String printLevels()
+	{
+		String result = "";
+		  Iterator<T> iter  = this.levelorder();
+		  int currentLevel = 0;
+		  
+	      while(iter.hasNext())
+	      {  	  
+	    	  
+	    	  String tempStr = iter.next().toString();
+	    	  int height = root.height();
+	    	  int level = root.getLevel(tempStr);
+	    	  if(level == currentLevel)
+	    	  {
+	    		  while(height > currentLevel)
+	    		  {
+	    			  result += "		";
+	    			  height--;
+	    		  }
+	    		  result += tempStr + "	";
+	    	  }
+	    	  else
+	    	  {
+	    		  result += "\n";
+	    		  while(height > currentLevel)
+	    		  {
+	    			  result += "	";
+	    			  height --;
+	    		  }
+	    		  result += tempStr + "	";
+	    		  currentLevel = level;
+	    	  }
+ 	  
+	      }
+	      return result;
+	}
+
 
 	//-----------------------------------------------------------------
 	//  Adds the specified element to this binary search tree.
@@ -61,7 +155,9 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 		else
 		{
 			//Need to check if item already exists
-			((BSTNode)root).add(item);			
+			if(root.find(item) == null)
+				((BSTNode)root).add(item);	
+				
 		}
 	}
 

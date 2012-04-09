@@ -16,7 +16,7 @@ public class BTNode<T>
    protected T element;
    protected BTNode<T> left, right;
    //Added to support level finds for printOne()
-   static Hashtable <String, Integer> ht = new Hashtable<String, Integer>();
+   public static Hashtable <String, Integer> ht = new Hashtable<String, Integer>();
 	   
    //-----------------------------------------------------------------
    //  Creates a new tree node with the specified data.
@@ -116,19 +116,13 @@ public class BTNode<T>
    
    public String printOne()
    {
-	   //Hashtable tempHt = ht;
 	   String result = "";
 	   if(right != null)
 	   {
-		   //result += "-";
 		   result += right.printOne();
-
-	   }
-	   
-	   //int level = this.getLevel(this, this.element);
+	   }	   
 	   String tempStr = element.toString();
 	   Integer temp = ht.get(tempStr);
-	   //System.out.println("Level of element: " + temp);
 	   while(temp > 0)
 	   {
 		   result += "  	";
@@ -138,9 +132,7 @@ public class BTNode<T>
 	   result += "\n";
 	   if(left != null)
 	   {
-
 		   result += left.printOne();
-
 	   }
 	   return result;
    }
@@ -151,23 +143,25 @@ public class BTNode<T>
 	   String result = "";
 	   if(right != null)
 	   {
-		   //result += "";
 		   result += right.printTwo();
 	   }
 	   result += "\n " + element.toString();
 	   if(left != null)
 	   {
-		   //result += "\n ";
 		   result += left.printTwo();
 	   }
 	   return result;
 	   
    }
+   public int getLevel(String node)
+   {
+	   int level = ht.get(node);
+	   return level;
+   }
  
    public static void level(BTNode n)
    {
-	   levelAndNumbers(n, 0);
-	   
+	   levelAndNumbers(n, 0);	   
    }
    private static void levelAndNumbers(BTNode n, Integer i)
    {
@@ -185,6 +179,10 @@ public class BTNode<T>
 		   if(n.getRight() != null)
 			   levelAndNumbers(n.getRight(), i+1);
 	   }
+   }
+   public static void printLevels()
+   {
+	   
    }
 
    
