@@ -60,6 +60,7 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 		BTNode current = root;
 		String tempStr = "";
 		int value = 0;
+		//Store tree in array format per p 665
 		while(iter.hasNext())
 		{	
 			  
@@ -97,6 +98,7 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 		
 		}
 		int previous = 1;
+		//Print out elements
         for(int i=0; i<numElements; i++)
         {
         	
@@ -106,7 +108,7 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
         		int temp = i*2 + 1;
         		while(temp < numElements && elements[temp] != 0)
         		{
-        			result +="            ";
+        			result +="        ";
         			temp = temp*2 + 1;
         		}
         		result += Integer.toString(elements[i]);
@@ -118,19 +120,19 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
         		int temp = i*2 + 1;
         		while(temp < numElements && elements[temp] != 0)
         		{
-        			result +="         ";
+        			result +="   ";
         			temp = temp*2 + 1;
         		}
-        		result += Integer.toString(elements[i]);
+        		result += "   " + Integer.toString(elements[i]) + "     ";
         		i++;
         		//result += " ";
         		temp = i*2 + 1;
         		while(temp < numElements && elements[temp] != 0)
         		{
-        			result +="                        ";
+        			result +="     ";
         			temp = temp*2 + 1;
         		}
-        		result += Integer.toString(elements[i]);
+        		result += "      " + Integer.toString(elements[i]);
         		
         	}
         	else
@@ -144,16 +146,20 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
         			int temp = i*2 + 1;
         			while(temp < numElements && elements[temp] != 0)
         			{
-        				result +="          ";
+        				result +="    ";
         				temp = temp*2 + 1;
         			}
-        			if(elements[i] != 0)
+        			if(elements[i] > 0)
         			{
-        				result += Integer.toString(elements[i]) + "             ";
+        				for(int k = 0; k <j; k++)
+        				{
+        					result += " ";
+        				}
+        				result += "   " + Integer.toString(elements[i]) + "  ";
         			}
         			else
         			{
-        				result += "\t";
+        				result += "    ";
         			}
         			i++;
         		}

@@ -13,11 +13,11 @@ public class TreeDemo
 		   lbst.add(22);
 		   lbst.add(24);
 		   lbst.add(19);
-		   lbst.add(35);
-		   lbst.add(23);
+		   //lbst.add(35);
+		   /*lbst.add(23);
 		   lbst.add(11);
 		   lbst.add(12);
-		   lbst.add(13);
+		   lbst.add(13);*/
 		   
 		   //int[]  treeArray = new int[8];
 		   
