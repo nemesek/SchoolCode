@@ -1,8 +1,16 @@
 <?php
-
-$StudentID = $_GET['studentid'];
-$TestID = $_GET['testid'];
 $QuestionID = $_GET['questionid'];
+if($QuestionID == 1)
+{
+	$StudentID = $_POST['StudentID'];
+	//TODO - Add Query to insert test ID 
+}
+else
+{ 
+	$StudentID = $_GET['studentid'];
+}
+$TestID = $_GET['testid'];
+
 $dbuser="root";
 $dbpass="abc@1234";
 $dbname="database1";

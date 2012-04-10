@@ -1,8 +1,15 @@
 <?php
-
-$StudentID = $_GET['studentid'];
-$TestID = $_GET['testid'];
 $QuestionID = $_GET['questionid'];
+if($QuestionID == 1)
+{
+	$StudentID = $_POST['StudentID'];
+}
+else
+{ 
+	$StudentID = $_GET['studentid'];
+}
+$TestID = $_GET['testid'];
+
 $dbuser="root";
 $dbpass="abc@1234";
 $dbname="database1";
@@ -15,7 +22,8 @@ if(isset($_POST['BtnSubmit']))
   $answer = $_POST['number'];
   echo $answer ."<BR>"; 
   $prevQuestion = $QuestionID - 1;
-  $insert="INSERT INTO Answers (Value, TestID, QuestionID) VALUES (" .$answer ."," .$TestID ."," .$prevQuestion .")";	
+  $insert="INSERT INTO Answers (Value, TestID, QuestionID) VALUES (" .$answer ."," .$TestID ."," .$prevQuestion .")";
+  mysql_query($insert);	
 }
 
 $query="SELECT Value FROM Questions WHERE QuestionID=" .$QuestionID;
