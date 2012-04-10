@@ -1,27 +1,37 @@
 <?php
 $QuestionID = $_GET['questionid'];
-if($QuestionID == 1)
-{
-	$StudentID = $_POST['StudentID'];
-	//TODO - Add Query to insert test ID 
-}
-else
-{ 
-	$StudentID = $_GET['studentid'];
-}
-$TestID = $_GET['testid'];
-
 $dbuser="root";
 $dbpass="abc@1234";
 $dbname="database1";
 $chandle = mysql_connect("localhost", $dbuser, $dbpass)
 	or die("Connection Failure to Database");
 mysql_select_db($dbname, $chandle) or die ($dbname . " Database not found. " . $dbuser);
+
+if($QuestionID == 1)
+{
+	$StudentID = $_POST['StudentID'];
+	$TestQuery ="INSERT INTO Tests (Type, StudentID) Values ('SYSR'," .$StudentID .")";  
+	mysql_query($TestQuery);
+        $MaxQuery ="SELECT MAX(TestID) FROM Tests";
+	$Max = mysql_query($MaxQuery);
+	$max = mysql_fetch_assoc($Max);
+   	$TestID = $max['MAX(TestID)'];
+	//echo "<BR>" .$max['MAX(TestID)'];
+	//echo "<BR>" .$TestID;
+	
+}
+else
+{ 
+	$StudentID = $_GET['studentid'];
+	$TestID = $_GET['testid'];
+}
+
+
 if(isset($_POST['BtnSubmit']))
 {
   //echo "</br>Answer:{$_POST['number']}";
   $answer = $_POST['number'];
-  echo $answer ."<BR>"; 
+  //echo $answer ."<BR>"; 
   $prevQuestion = $QuestionID - 1;
   $insert="INSERT INTO Answers (Value, TestID, QuestionID) VALUES (" .$answer ."," .$TestID ."," .$prevQuestion .")";
   mysql_query($insert);	
@@ -41,7 +51,7 @@ if($next < 19)
 }
 else
 {
-	$queryString = "http://localhost/EndTest.php";
+	$queryString = "http://localhost/EndTest.php?studentid=".$StudentID ."&testid=" .$TestID ."&questionid=" .$next;
 }
 ?>
 
