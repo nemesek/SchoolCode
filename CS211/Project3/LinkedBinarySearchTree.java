@@ -33,10 +33,7 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	
 	public String toString()
 	{
-		//root.level(root);
-		return root.toString();
-		//return "from lbst";
-		
+		return root.toString();		
 	}
 	public String printOne()
 	{
@@ -48,7 +45,7 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 		return root.printTwo();
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public String printLevels3()
+	public String printLevels()
 	{
 		String result = "";
 		double height = root.height();
@@ -57,11 +54,11 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 		int num = (int)numElements;
 		int[] elements = new int[num];
 		Iterator<T> iter  = this.levelorder();
-		//int currentLevel = 0;
 		int index = 0;
 		BTNode current = root;
 		String tempStr = "";
 		int value = 0;
+		
 		//Store tree in array format per p 665
 		while(iter.hasNext())
 		{
@@ -104,23 +101,19 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	    	index++;
 		
 		}			
-		//print out values
-		/*for(int i=0; i<numElements; i++)
-		{
-			result += Integer.toString(elements[i]) + ",";
-		}*/
-		
+
+		//Now Build the return String result
 		int i=0;
 		for(int level=0; level <= height + 1; level++)
 		{
 			String gap = "";
 			double numNodes = Math.pow(2, level);
 			double printGap = Math.pow(2, height);
-			//printGap /= 2;
+	
 			for(int k=0; k < (printGap/numNodes); k++)
 			{
 				gap += "    ";
-				//gap += "  ";
+
 			}
 			
 			for(int j=0; j<numNodes; j++)
@@ -145,168 +138,8 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 		
 		return result;
 	}
-	public String printLevels2()
-	{
-		String result = "";
-		double height = root.height();
-		double numElements = Math.pow(2, height+1);
-		int num = (int)numElements + 10;
-		int[] elements = new int[num];
-		Iterator<T> iter  = this.levelorder();
-		int currentLevel = 0;
-		int index = 0;
-		BTNode current = root;
-		String tempStr = "";
-		int value = 0;
-		//Store tree in array format per p 665
-		while(iter.hasNext())
-		{	
-			  
-			  tempStr = iter.next().toString();
-			  value = Integer.parseInt(tempStr);
-			  current = current.find(value);
-			  if(current == null)
-			  {
-				  current = root;
-				  current = current.find(value);
-			  }
-			  //current = root.find(value);
-			  
-			  if(index == 0)
-			  {
-				  elements[index] = value;
-			  }
-	    	  if(current.getLeft() != null)
-	    	  {
-	    		  tempStr = current.getLeft().element.toString();
-	    		  value = Integer.parseInt(tempStr);
-	    		  int left = index*2 + 1;
-	    		  elements[left] = value;	    		  
-	    		  
-	    	  }
-
-	    	  if(current.getRight() != null)
-	    	  {
-	    		  tempStr = current.getRight().element.toString();
-	    		  value = Integer.parseInt(tempStr);
-	    		  int right = 2*(index+1);
-	    		  elements[right] = value;
-	    	  }
-	    	  index++;
-		
-		}
-		int previous = 1;
-		//Print out elements
-        for(int i=0; i<numElements; i++)
-        {
-        	
-        	if(i == 0)
-        	{
-        		result += "\n";
-        		int temp = i*2 + 1;
-        		while(temp < numElements && elements[temp] != 0)
-        		{
-        			result +="        ";
-        			temp = temp*2 + 1;
-        		}
-        		result += Integer.toString(elements[i]);
-        	}
-        	else if(i == 1)
-        	{
-        		result += "\n";
-        		previous = 2*i;
-        		int temp = i*2 + 1;
-        		while(temp < numElements && elements[temp] != 0)
-        		{
-        			result +="   ";
-        			temp = temp*2 + 1;
-        		}
-        		result += "   " + Integer.toString(elements[i]) + "     ";
-        		i++;
-        		//result += " ";
-        		temp = i*2 + 1;
-        		while(temp < numElements && elements[temp] != 0)
-        		{
-        			result +="     ";
-        			temp = temp*2 + 1;
-        		}
-        		result += "      " + Integer.toString(elements[i]);
-        		
-        	}
-        	else
-        	{
-        		result += "\n";
-        		previous = 2*previous;
-        		for(int j = 0; j < previous; j++)
-        		{
-        			//result += Integer.toString(elements[i]) + "	";
-        			//i++;
-        			int temp = i*2 + 1;
-        			while(temp < numElements && elements[temp] != 0)
-        			{
-        				result +="    ";
-        				temp = temp*2 + 1;
-        			}
-        			if(elements[i] > 0)
-        			{
-        				for(int k = 0; k <j; k++)
-        				{
-        					result += " ";
-        				}
-        				result += "   " + Integer.toString(elements[i]) + "  ";
-        			}
-        			else
-        			{
-        				result += "    ";
-        			}
-        			i++;
-        		}
-        		
-        	}
-        		
-    	}
-		
-		return result;
-	}
-
-	public String printLevels()
-	{
-		String result = "";
-		  Iterator<T> iter  = this.levelorder();
-		  int currentLevel = 0;
-		  
-	      while(iter.hasNext())
-	      {  	  
-	    	  
-	    	  String tempStr = iter.next().toString();
-	    	  int height = root.height();
-	    	  int level = root.getLevel(tempStr);
-	    	  if(level == currentLevel)
-	    	  {
-	    		  while(height > currentLevel)
-	    		  {
-	    			  result += "		";
-	    			  height--;
-	    		  }
-	    		  result += tempStr + "	";
-	    	  }
-	    	  else
-	    	  {
-	    		  result += "\n";
-	    		  while(height > currentLevel)
-	    		  {
-	    			  result += "	";
-	    			  height --;
-	    		  }
-	    		  result += tempStr + "	";
-	    		  currentLevel = level;
-	    	  }
- 	  
-	      }
-
-	      return result;
-	}
-
+	
+	
 
 	//-----------------------------------------------------------------
 	//  Adds the specified element to this binary search tree.

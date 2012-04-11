@@ -21,7 +21,8 @@ public class BSTNode<T extends Comparable<T>> extends BTNode<T>
    //  Adds a new node containing the specified element at the
    //  appropriate place in this tree.
    //-----------------------------------------------------------------
-   public void add (T item)
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+public void add (T item)
    {
       if (item.compareTo(element) < 0)
          if (left == null)
