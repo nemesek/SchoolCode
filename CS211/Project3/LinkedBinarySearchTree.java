@@ -47,6 +47,104 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	{
 		return root.printTwo();
 	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public String printLevels3()
+	{
+		String result = "";
+		double height = root.height();
+		double numElements = Math.pow(2, height+1);
+		numElements--;
+		int num = (int)numElements;
+		int[] elements = new int[num];
+		Iterator<T> iter  = this.levelorder();
+		//int currentLevel = 0;
+		int index = 0;
+		BTNode current = root;
+		String tempStr = "";
+		int value = 0;
+		//Store tree in array format per p 665
+		while(iter.hasNext())
+		{
+			
+			tempStr = iter.next().toString();
+			value = Integer.parseInt(tempStr);
+			current = current.find(value);
+			if(current == null)
+			{
+				current = root;
+				current = current.find(value);
+			}
+				  
+			if(index == 0)
+			{
+				elements[index] = value;
+			}
+			while(index < elements.length && elements[index]==0)
+			{
+				index++;
+			}
+	    	if(current.getLeft() != null)
+	    	{
+	    		tempStr = current.getLeft().element.toString();
+	    		value = Integer.parseInt(tempStr);
+	    		int left = index*2 + 1;
+	    		if(left < elements.length)
+	    			elements[left] = value;	    		  
+	    		  
+	    	}
+	
+	    	if(current.getRight() != null)
+	    	{
+	    		tempStr = current.getRight().element.toString();
+	    		value = Integer.parseInt(tempStr);
+	    		int right = 2*(index+1);
+	    		if(right < elements.length)
+	    			elements[right] = value;
+	    	}
+	    	index++;
+		
+		}			
+		//print out values
+		/*for(int i=0; i<numElements; i++)
+		{
+			result += Integer.toString(elements[i]) + ",";
+		}*/
+		
+		int i=0;
+		for(int level=0; level <= height + 1; level++)
+		{
+			String gap = "";
+			double numNodes = Math.pow(2, level);
+			double printGap = Math.pow(2, height);
+			//printGap /= 2;
+			for(int k=0; k < (printGap/numNodes); k++)
+			{
+				gap += "    ";
+				//gap += "  ";
+			}
+			
+			for(int j=0; j<numNodes; j++)
+			{
+				if(i < numElements)
+				{
+					if(elements[i] > 0)
+					{
+						result += gap + Integer.toString(elements[i]) + gap;
+					}
+					else
+					{
+						result += gap +" " + gap;
+					}
+					i++;
+				}
+				
+			}
+			result += "\n\n";
+		}		
+		
+		
+		return result;
+	}
 	public String printLevels2()
 	{
 		String result = "";
