@@ -12,32 +12,27 @@ public class TreeDemo
 		   lbst.add(19);
 		   lbst.add(22);
 		   lbst.add(24);
-
+		   //lbst.add(35);
+		   //lbst.add(5);
+		   //lbst.add(39);
+		   //lbst.add(4);
+		   //lbst.add(18);
 		   
-		   //int[]  treeArray = new int[8];
-		   
-	      // print an inorder traversal of the tree
-	      //System.out.println ("Inorder Traversal: ");
-	      //Iterator<Integer> i = lbst.inorder();
-	      //int index =0;
-	      /*while (i.hasNext())
-	      {
-	    	  int temp = i.next();
-	         System.out.println(" --> " + temp);
-	         treeArray[index] = temp;
-	         index++;
-	      }*/
+		  //Print out 1 
+		  System.out.println("Calling printOne()"); 
 	      System.out.println(lbst.printOne());
+	      //Print out 2
+	      System.out.println("Calling printTwo()");
 	      System.out.println(lbst.printTwo());
-	      //System.out.println(lbst.printLevels());
-	      System.out.println(lbst.printLevels2());
-	      //System.out.println(lbst.printLevels());
-	      /*Iterator<Integer> i = lbst.printLevels();
-	      while(i.hasNext())
-	      {
-	    	  System.out.println("--> " + i.next());
-	      }
-	      lbst.printLevels();*/
+	      //Try to add an element that is already in the BST, and call printTwo again to show 
+	      //no duplicate elements
+	      lbst.add(19);
+	      System.out.println();
+	      System.out.print("printTwo() BST output after trying to add 19 again:");
+	      System.out.println(lbst.printTwo());
+	      System.out.println();
+	      System.out.println("Calling printLevels() to display in level order");
+	      System.out.println(lbst.printLevels());
 	      
 	      
 	}

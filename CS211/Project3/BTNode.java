@@ -180,10 +180,7 @@ public class BTNode<T>
 			   levelAndNumbers(n.getRight(), i+1);
 	   }
    }
-   public static void printLevels()
-   {
-	   
-   }
+
 
    
    //-----------------------------------------------------------------
