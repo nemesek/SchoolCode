@@ -7,7 +7,7 @@
      Instructor: Ms. C. B. Zickos
      Program Description: Handles implemntation of node related methods - normally invoked from BST and BT modules
      Sources Consulted: Got idea from Stackoverflow on levelsAndNumbers method - used to create a hashtable which stored the
-     //node levels.  Used the hashtable within printone()
+     //node levels.  
     
      Honor Code Statement: In keeping with the honor code policies of the University of Mississippi, the School of Engineering,      and the Department of Computer and Information Science, I affirm that I have neither given nor received assistance on this      programming assignment. This assignment represents my individual, original effort.
                     ... My Signature is on File.
@@ -129,7 +129,8 @@ public class BTNode<T>
 	  
    }
    
-   //Added method to implement Part1 number 1 requirements
+   //Added method to implement Part1 number 1 requirements - No longer needed as implemented in 
+   //LinkedBinarySearchTree.ouputTree now
    public String printOne()
    {
 	   
@@ -179,9 +180,11 @@ public class BTNode<T>
    //Create a hashtable of the all nodes and store the level as the value in the hashtable
    //Got the idea from http://Stackoverflow
    
-   public static void level(BTNode n)
+   public static Hashtable level(BTNode n)
    {
-	   levelAndNumbers(n, 0);	   
+	   levelAndNumbers(n, 0);
+	   return ht;
+	  
    }
    private static void levelAndNumbers(BTNode n, Integer i)
    {

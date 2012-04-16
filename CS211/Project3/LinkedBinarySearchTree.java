@@ -49,12 +49,41 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	{
 		return root.toString();		
 	}
-	//Added method to support Part1 number 1 - Basically forwards call to BTNode.java which handles implementation
-	public String printOne()
+
+	//pubic interface for client programs - forwards call to overloaded method with Hashtable arg
+	public String outputTree(BTNode n)
 	{
-		BTNode.level(root);  //I do this to construct a hashtable that BTNode uses to build the result string
-		return root.printOne();
+		Hashtable<String, Integer> ht = BTNode.level(n);
+		String result = outputTree(n, ht);
+		return result;
 	}
+	//private implementation for Part 1 #1 reqs
+   private String outputTree(BTNode n, Hashtable<String, Integer> ht)
+   {
+	   String result = "";
+	   if(n != null)
+	   {
+		   if(n.right != null)
+		   {
+			   result += this.outputTree(n.right, ht);			   
+		   }
+		   int level = ht.get(n.element.toString());
+		   while(level > 0)
+		   {
+			   result +="     ";
+			   level--;
+		   }
+		   result += n.element.toString() + "-";
+		   result += "\n";
+		   if(n.left != null)
+		   {
+			   result += this.outputTree(n.left,ht);
+		   }
+	   }
+	   return result;
+   }
+
+
 	//Added method to support Part1 number 2 - Basically forwards call to BTNode.java which handles implementation
 	public String printTwo()
 	{

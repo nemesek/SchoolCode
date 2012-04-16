@@ -34,10 +34,10 @@ public class TreeDemo
 		   //lbst.add(18);
 		   
 		  //Print out 1 
-		  System.out.println("Calling printOne()"); 
-	      System.out.println(lbst.printOne());
+		  System.out.println("Calling outputTree()"); 
+		  System.out.println(lbst.outputTree(lbst.root));
 	      //Print out 2
-	      System.out.println("Calling printTwo()");
+	      System.out.println("Calling printTwo() which returns strin in descending order");
 	      System.out.println(lbst.printTwo());
 	      //Try to add an element that is already in the BST, and call printTwo again to show 
 	      //no duplicate elements
