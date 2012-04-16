@@ -1,0 +1,87 @@
+1	Patrick Joseph Kennedy	84	85	1858	1929
+2	Mary Augusta Hickey	86	87	1857	1923
+3	John Francis Fitzgerald	-1	-1	1863	1950
+4	Mary Josephine Hannon	-1	-1	1865	1964
+5	Joseph Patrick Kennedy	1	2	1888	1969
+6	Rose Elizabeth Fitzgerald	3	4	1890	1995
+7	John Fitzgerald Kennedy	5	6	1917	1963
+8	Jacqueline Lee Bouvier	-1	-1	1929	1994
+9	Arabella Kennedy	7	8	1956	1956
+10	Caroline Bouvier Kennedy	7	8	1957	-1
+11	John Fitzgerald Kennedy	7	8	1960	1999
+12	Patrick Bouvier Kennedy	7	8	1963	1963
+13	Edwin Arthur Schlossberg	-1	-1	1945	-1
+14	Carolyn Jeanne Bessette	-1	-1	1966	1999
+15	Rose Kennedy Schlossberg	13	10	1988	-1
+16	Tatiana Celia Kennedy Schlossberg	13	10	1990	-1
+17	John Bouvier Kennedy Schlossberg	13	10	1992	-1
+18	Joseph Patrick Kennedy	5	6	1915	1944
+19	Rosemary Kennedy	5	6	1918	-1
+20	Kathleen Kennedy	5	6	1920	1948
+21	Patricia Kennedy	5	6	1924	-1
+22	Peter Lawford	-1	-1	1923	1984
+23	Christopher Kennedy Lawford	22	21	1955	-1
+24	Sydney Maleia Lawford	22	21	1956	-1
+25	Victoria Francis Lawford	22	21	1958	-1
+26	Robin Elizabeth Lawford	22	21	1961	-1
+27	Eunice Mary Kennedy	5	6	1921	-1
+28	Robert Sargent Shriver	-1	-1	1915	-1
+29	Robert Sargent Shriver	28	27	1954	-1
+30	Maria Owings Shriver	28	27	1955	-1
+31	Arnold Alois Schwarzenegger	-1	-1	1955	-1
+32	Timothy Perry Shriver	28	27	1959	-1
+33	Mark Kennedy Shriver	28	27	1964	-1
+34	Anthony Paul Shriver	28	27	1965	-1
+35	Katherine Eunice Schwarzenegger	31	30	1986	-1
+36	Christina Aurelia Schwarzenegger	31	30	1991	-1
+37	Patrick Schwarzenegger	31	30	1993	-1
+38	Robert Francis Kennedy	5	6	1925	1968
+39	Jean Ann Kennedy	5	6	1928	-1
+40	Edward Moore Kennedy	5	6	1932	-1
+41	Stephen Edward Smith	-1	-1	1927	-1
+42	Stephen Edward Smith	41	39	1957	-1
+43	William Kennedy Smith	41	39	1960	-1
+44	Amanda Mary Smith	41	39	1967	-1
+45	Kym Marie Smith	41	39	1972	-1
+46	Virginia Joan Bennett	-1	-1	1936	-1
+47	Kara Ann Kennedy	40	46	1960	-1
+48	Edward Moore Kennedy	40	46	1961	-1
+49	Patrick Joseph Kennedy	40	46	1967	-1
+50	Ethel Skakel	-1	-1	1928	-1
+51	Kathleen Hartington Kennedy	38	50	1951	-1
+52	Joseph Patrick Kennedy	38	50	1952	-1
+53	Robert Francis Kennedy	38	50	1954	-1
+54	David Anthony Kennedy	38	50	1955	1984
+55	Mary Courtney Kennedy	38	50	1956	-1
+56	Michael Lemoyne Kennedy	38	50	1958	-1
+57	Mary Kerry Kennedy	38	50	1959	-1
+58	Christopher George Kennedy	38	50	1963	-1
+59	Matthew Maxwell Taylor Kennedy	38	50	1965	-1
+60	Douglas Harriman Kennedy	38	50	1967	-1
+61	Rory Elizabeth Katherine Kennedy	38	50	1968	-1
+62	David Lee Townsend	-1	-1	1947	-1
+63	Meaghan Anne Kennedy Townsend	62	51	1977	-1
+64	Maeve Fahey Kennedy Townsend	62	51	1979	-1
+65	Rose Katherine Kennedy Townsend	62	51	1983	-1
+66	Kerry Sophia Kennedy Townsend	62	51	1991	-1
+67	Sheila Brewster Rauch	-1	-1	1949	-1
+68	Matthew Rauch Kennedy	52	67	1980	-1
+69	Joseph Patrick Kennedy	52	67	1980	-1
+70	Emily Ruth Black	-1	-1	1957	-1
+71	Robert Francis Kennedy	53	70	1984	-1
+72	Kathleen Alexandra Kennedy	53	70	-1	-1
+73	Victoria Denise Gifford	-1	-1	1957	-1
+74	Michael LeMoyne Kennedy	56	73	1983	-1
+75	Kyle Frances Kennedy	56	73	1984	-1
+76	Patrick Kennedy	-1	-1	1800	-1
+77	Mary Johanna UNKNOWN	-1	-1	1800	1860
+78	Richard Murphy	-1	-1	1800	1860
+79	Mary UNKNOWN	-1	-1	1800	1860
+80	Michael Hickey	-1	-1	1810	1870
+81	Catherine Hassett	-1	-1	1810	-1
+82	Patrick Field	-1	-1	1810	-1
+83	Mary Sheehy	-1	-1	1810	-1
+84	Patrick Kennedy	76	77	1823	1858
+85	Bridget Murphy	78	79	1821	1888
+86	James Hickey	80	81	1836	1900
+87	Margaret M. Field	82	83	1836	1911
