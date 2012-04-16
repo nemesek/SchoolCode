@@ -1,20 +1,13 @@
 <?php
+$admin = $_POST['admin'];
+echo "Deleting Administrator ".$admin ."<br/>";
 $dbuser="root";
 $dbpass="abc@1234";
 $dbname="database1";
 $chandle = mysql_connect("localhost", $dbuser, $dbpass)
 	or die("Connection Failure to Database");
-echo "Connected successfully";
 mysql_select_db($dbname, $chandle) or die ($dbname . " Database not found. " . $dbuser);
-
-$query="select * from Students";
-$result = mysql_query($query);
-while($row = mysql_fetch_assoc($result))
-{
-	echo "<BR>";
-	echo $row['FirstName'] &nbsp;
-	echo $row['LastName'];
-	echo $row['Age'];
-}
- ?>
-
+$update="DELETE FROM Administrators WHERE AdministratorID=" .$admin;
+mysql_query($update);
+echo "Administrator " .$admin ." has been deleted";
+?>

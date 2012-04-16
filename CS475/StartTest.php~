@@ -1,7 +1,0 @@
-<?php
-//echo rand() ."<BR>";
-//echo rand(). "\n";
-$TestID = rand(20, 100);
-echo $TestID;
-?>
-
