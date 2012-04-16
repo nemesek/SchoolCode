@@ -1,4 +1,19 @@
+/*
+     Name: Dan Nemesek
+     Email: djnemese@olemiss.edu
+     Program Source File Name: BTNode.java
+     Current Date: 4/15/2012
+     Course Information: CSCI 211 - Section 01
+     Instructor: Ms. C. B. Zickos
+     Program Description: Handles implemntation of node related methods - normally invoked from BST and BT modules
+     Sources Consulted: Got idea from Stackoverflow on levelsAndNumbers method - used to create a hashtable which stored the
+     //node levels.  Used the hashtable within printone()
+    
+     Honor Code Statement: In keeping with the honor code policies of the University of Mississippi, the School of Engineering,      and the Department of Computer and Information Science, I affirm that I have neither given nor received assistance on this      programming assignment. This assignment represents my individual, original effort.
+                    ... My Signature is on File.
+*/ 
 //*******************************************************************
+
 
 //  BTNode.java       Java Foundations
 //
@@ -114,8 +129,10 @@ public class BTNode<T>
 	  
    }
    
+   //Added method to implement Part1 number 1 requirements
    public String printOne()
    {
+	   
 	   String result = "";
 	   if(right != null)
 	   {
@@ -137,7 +154,7 @@ public class BTNode<T>
 	   return result;
    }
 
-   
+ //Added method to implement Part1 number 2 requirements
    public String printTwo()
    {
 	   String result = "";
@@ -153,12 +170,15 @@ public class BTNode<T>
 	   return result;
 	   
    }
-   public int getLevel(String node)
+   /*public int getLevel(String node)
    {
 	   int level = ht.get(node);
 	   return level;
-   }
- 
+   }*/
+   //Next two methods are needed by printone
+   //Create a hashtable of the all nodes and store the level as the value in the hashtable
+   //Got the idea from http://Stackoverflow
+   
    public static void level(BTNode n)
    {
 	   levelAndNumbers(n, 0);	   

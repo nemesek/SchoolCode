@@ -1,5 +1,19 @@
+/*
+     Name: Dan Nemesek
+     Email: djnemese@olemiss.edu
+     Program Source File Name: LinkedBinarySearchTree.java
+     Current Date: 4/15/2012
+     Course Information: CSCI 211 - Section 01
+     Instructor: Ms. C. B. Zickos
+     Program Description: Provides the public interfaces for a client program to construct a BST
+     Sources Consulted: None
+    
+     Honor Code Statement: In keeping with the honor code policies of the University of Mississippi, the School of Engineering,      and the Department of Computer and Information Science, I affirm that I have neither given nor received assistance on this      programming assignment. This assignment represents my individual, original effort.
+                    ... My Signature is on File.
+*/ 
 //*******************************************************************
 //  LinkedBinarySearchTree.java       Java Foundations
+
 //
 //  Implements the binary tree using a linked representation.
 //*******************************************************************
@@ -35,16 +49,19 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	{
 		return root.toString();		
 	}
+	//Added method to support Part1 number 1 - Basically forwards call to BTNode.java which handles implementation
 	public String printOne()
 	{
-		BTNode.level(root);
+		BTNode.level(root);  //I do this to construct a hashtable that BTNode uses to build the result string
 		return root.printOne();
 	}
+	//Added method to support Part1 number 2 - Basically forwards call to BTNode.java which handles implementation
 	public String printTwo()
 	{
 		return root.printTwo();
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	//Added method to support  Part1 number 4
 	public String printLevels()
 	{
 		String result = "";
@@ -144,6 +161,7 @@ extends LinkedBinaryTree<T> implements BinarySearchTree<T>
 	//-----------------------------------------------------------------
 	//  Adds the specified element to this binary search tree.
 	//-----------------------------------------------------------------
+	//Modified method to check if item already exists Part1 number 3 - if it does then don't add again
 	public void add (T item)
 	{
 		if (root == null)

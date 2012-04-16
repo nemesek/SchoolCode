@@ -1,3 +1,18 @@
+/*
+     Name: Dan Nemesek
+     Email: djnemese@olemiss.edu
+     Program Source File Name: TreeDemo.java
+     Current Date: 4/15/2012
+     Course Information: CSCI 211 - Section 01
+     Instructor: Ms. C. B. Zickos
+     Program Description: Driver program.  Constructs a BST and calls printOne(), printTwo, trys to add existing element
+     //and calls printLevels to demonstrate that the requirements of the program were fulfilled.
+     Sources Consulted: none
+    
+     Honor Code Statement: In keeping with the honor code policies of the University of Mississippi, the School of Engineering,      and the Department of Computer and Information Science, I affirm that I have neither given nor received assistance on this      programming assignment. This assignment represents my individual, original effort.
+                    ... My Signature is on File.
+*/ 
+//*******************************************************************
 import java.util.*;
 
 public class TreeDemo 
