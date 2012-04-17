@@ -1,6 +1,5 @@
-import java.util.Iterator;
 import java.util.*;
-import java.util.concurrent.*;
+
 
 
 public class AncestorTree 
@@ -14,7 +13,6 @@ public class AncestorTree
 	public AncestorTree(Node n)
 	{
 		root = n;
-		//count++;
 	}
 
 	public void InsertFather(Node n)
@@ -59,7 +57,20 @@ public class AncestorTree
 		return nodes;
 		
 	}
-
-
+	public int GetLevel(Node n, int id,  int level)
+	{
+		if(n == null)
+			return 0;
+		if(id == n.id)
+			return level;
+		int dad = GetLevel(n.GetFather(), id, level+1);
+		int mom = GetLevel(n.GetMother(), id, level+1);
+		if(dad>mom)
+			level = dad;
+		else
+			level = mom;
+		return level;
+		
+	}
 
 }

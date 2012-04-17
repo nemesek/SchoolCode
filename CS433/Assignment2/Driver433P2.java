@@ -62,9 +62,12 @@ public class Driver433P2
 		System.out.println(temp.GetParentInfo());
 		System.out.println("\nImmediate Children:");
 		System.out.println(temp.ListChildren());
-		int count = temp.GetAncestorCount();
-		System.out.println("Ancestor Count: " + Integer.toString(count));
+		int aCount = temp.GetAncestorCount();
+		System.out.println("Ancestor Count: " + Integer.toString(aCount));
 		System.out.println(temp.ListAncesotrs());
+		int dCount = temp.GetDescendantCount();
+		System.out.println("\nDescendantCount: " + Integer.toString(dCount));
+		System.out.println(temp.ListDescendants());
 
 	}
 

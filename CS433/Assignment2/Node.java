@@ -8,7 +8,6 @@ public class Node
 	private Node mother;
 	private Node father;
 	private LinkedList<Node> childrenList = new LinkedList<Node>();
-	//private Hashtable<Integer, Node> ht;
 	
 	public Node(int ID, String Name, int dadID, int momID, int birth, int death)
 	{
@@ -76,15 +75,38 @@ public class Node
 	public int GetAncestorCount()
 	{
 		AncestorTree at = new AncestorTree(this);
-		BuildAncestorTree(at);
-		
+		BuildAncestorTree(at);		
 		int count = at.GetCount();
 		return count;
 	}
 	public int GetDescendantCount()
 	{
 		int count = 0;
+		Iterator<Node> iterator = childrenList.iterator();
+		while(iterator.hasNext())
+		{
+			count++;
+			Node next = iterator.next();
+			count += next.GetDescendantCount();
+		}
 		return count;
+	}
+	public String ListDescendants()
+	{
+		return ListDescendants(1);
+	}
+	private String ListDescendants(int n)
+	{
+		String result = "";
+		Iterator<Node> iterator = childrenList.iterator();
+		while(iterator.hasNext())
+		{
+			Node next = iterator.next();
+			result += "\n" + next.name + " +" + Integer.toString(n);
+			result += next.ListDescendants(n+1);
+			
+		}
+		return result;
 	}
 	public String ListChildren()
 	{
@@ -107,14 +129,12 @@ public class Node
 		for(int i=1; i < ancestors.length; ++i)
 		{
 			result += "\n" + ancestors[i].name;
+			int level = at.GetLevel(this, ancestors[i].id, 0);
+			result += " +" + Integer.toString(level);
 		}
 		return result;
 	}
-	public String ListDescendandts()
-	{
-		String result = "";
-		return result;
-	}
+
 	public void SetMother(Node mom)
 	{
 		mother = mom;
