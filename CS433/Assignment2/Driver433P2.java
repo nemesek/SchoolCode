@@ -54,20 +54,48 @@ public class Driver433P2
 		}
 		catch (Exception ex)
 		{
-			System.out.println("Oops");
+			ex.printStackTrace();
 		}
-		
-		Node temp = list.get(0); //Note list is zero based
-		System.out.println(temp.GetUserInfo());
-		System.out.println(temp.GetParentInfo());
-		System.out.println("\nImmediate Children:");
-		System.out.println(temp.ListChildren());
-		int aCount = temp.GetAncestorCount();
-		System.out.println("Ancestor Count: " + Integer.toString(aCount));
-		System.out.println(temp.ListAncesotrs());
-		int dCount = temp.GetDescendantCount();
-		System.out.println("\nDescendantCount: " + Integer.toString(dCount));
-		System.out.println(temp.ListDescendants());
+		boolean prompt = true;
+		while(prompt)
+		{
+			Scanner scan = new Scanner(System.in);
+			System.out.println("Please enter an ID ");
+			String strID = scan.nextLine();
+			int id = Integer.parseInt(strID);
+			id--;
+			try
+			{
+				Node temp = list.get(id); //Note list is zero based
+				System.out.println("Printing out info for user ID " + strID);
+				System.out.println(temp.GetUserInfo());
+				System.out.println(temp.GetParentInfo());
+				System.out.println("\nImmediate Children:");
+				System.out.println(temp.ListChildren());
+				int aCount = temp.GetAncestorCount();
+				System.out.println("\nAncestor Count: " + Integer.toString(aCount));
+				System.out.println(temp.ListAncestors());
+				int dCount = temp.GetDescendantCount();
+				System.out.println("\nDescendantCount: " + Integer.toString(dCount));
+				System.out.println(temp.ListDescendants());
+
+				System.out.println("\nWould you like to exit? (y for yes, any other character for no)");
+				String answer = scan.nextLine();
+				if(answer.compareToIgnoreCase("y") == 0)
+				{
+					System.out.println("Bye");
+					prompt = false;
+				}
+
+			}
+			catch (Exception ex)
+			{
+				System.out.println("Not a valid id");
+				System.out.println("Please enter an id between 1 and " + Integer.toString(list.size()));
+			}
+				
+		}
+
 
 	}
 

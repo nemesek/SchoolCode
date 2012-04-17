@@ -57,7 +57,11 @@ public class AncestorTree
 		return nodes;
 		
 	}
-	public int GetLevel(Node n, int id,  int level)
+	public int GetLevel(Node n, int id)
+	{
+		return GetLevel(n, id, 0);
+	}
+	private int GetLevel(Node n, int id,  int level)
 	{
 		if(n == null)
 			return 0;

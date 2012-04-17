@@ -120,7 +120,7 @@ public class Node
 		}		
 		return result;
 	}
-	public String ListAncesotrs()
+	public String ListAncestors()
 	{
 		String result = "";
 		AncestorTree at = new AncestorTree(this);
@@ -129,7 +129,7 @@ public class Node
 		for(int i=1; i < ancestors.length; ++i)
 		{
 			result += "\n" + ancestors[i].name;
-			int level = at.GetLevel(this, ancestors[i].id, 0);
+			int level = at.GetLevel(this, ancestors[i].id);
 			result += " +" + Integer.toString(level);
 		}
 		return result;
