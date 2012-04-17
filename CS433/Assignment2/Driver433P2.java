@@ -33,18 +33,38 @@ public class Driver433P2
 				list.add(node);
 
 			}
-
+			//Set parent nodes
+			Iterator<Node> iterator = list.iterator();
+			while(iterator.hasNext())
+			{
+				Node temp = iterator.next();
+				int fatherID = temp.GetFatherID();
+				if(fatherID > 0)
+				{
+					Node father = list.get(fatherID-1);
+					temp.SetFather(father);
+				}
+				int motherID = temp.GetMotherID();
+				if(motherID > 0)
+				{
+					Node mother = list.get(motherID-1);
+					temp.SetMother(mother);
+				}
+			}
 		}
 		catch (Exception ex)
 		{
 			System.out.println("Oops");
 		}
 		
-		Node temp = list.get(10);
+		Node temp = list.get(0); //Note list is zero based
 		System.out.println(temp.GetUserInfo());
-		System.out.println("Getting Father's data");
-		Node father = temp.GetFather();
-		System.out.println(father.GetUserInfo());
+		System.out.println(temp.GetParentInfo());
+		System.out.println("\nImmediate Children:");
+		System.out.println(temp.ListChildren());
+		int count = temp.GetAncestorCount();
+		System.out.println("Ancestor Count: " + Integer.toString(count));
+		System.out.println(temp.ListAncesotrs());
 
 	}
 
