@@ -1,3 +1,10 @@
+//Dan Nemesek
+//Used Eclipse IDE
+//InputFile is named input.txt and is read from /src directory
+//Sources Consulted : Used a posting from Stackoverflow.com to get the idea for my AncestorTree.LevelOrder() method
+//I can't find the link though.
+//     Honor Code Statement: In keeping with the honor code policies of the University of Mississippi, the School of Engineering,      and the Department of Computer and Information Science, I affirm that I have neither given nor received assistance on this      programming assignment. This assignment represents my individual, original effort.
+//                 ... My Signature is on File.
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -63,10 +70,10 @@ public class Driver433P2
 			System.out.println("Please enter an ID ");
 			String strID = scan.nextLine();
 			int id = Integer.parseInt(strID);
-			id--;
+			id--; //Note list is zero based
 			try
 			{
-				Node temp = list.get(id); //Note list is zero based
+				Node temp = list.get(id); 
 				System.out.println("Printing out info for user ID " + strID);
 				System.out.println(temp.GetUserInfo());
 				System.out.println(temp.GetParentInfo());

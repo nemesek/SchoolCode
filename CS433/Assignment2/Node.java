@@ -1,3 +1,10 @@
+//Dan Nemesek
+//Used Eclipse IDE
+//InputFile is named input.txt and is read from /src directory
+//Sources Consulted : Used a posting from Stackoverflow.com to get the idea for my AncestorTree.LevelOrder() method
+//I can't find the link though.
+//     Honor Code Statement: In keeping with the honor code policies of the University of Mississippi, the School of Engineering,      and the Department of Computer and Information Science, I affirm that I have neither given nor received assistance on this      programming assignment. This assignment represents my individual, original effort.
+//                 ... My Signature is on File.
 import java.util.*;
 
 public class Node 
@@ -22,6 +29,7 @@ public class Node
 	{
 		return name;
 	}
+	//Requirement 1
 	public String GetUserInfo()
 	{
 		String result = "ID = " + Integer.toString(id) + "\nName: " + name  +  
@@ -31,6 +39,7 @@ public class Node
 		"\nDeath Year: " + Integer.toString(deathYear);
 		return result;
 	}
+	//Requirement 2
 	public String GetParentInfo()
 	{
 		String result = "\n";
@@ -55,6 +64,8 @@ public class Node
 		}
 		return result;
 	}
+	//Used to build a binary tree for ancestors with this as root
+	//Called by the GetAncestorCount() and ListAncestors() methods
 	private void BuildAncestorTree(AncestorTree at)
 	{
 		Node current = this;
@@ -72,6 +83,7 @@ public class Node
 		}
 		
 	}
+	//Requirement 3
 	public int GetAncestorCount()
 	{
 		AncestorTree at = new AncestorTree(this);
@@ -79,6 +91,7 @@ public class Node
 		int count = at.GetCount();
 		return count;
 	}
+	//Requirement 6
 	public int GetDescendantCount()
 	{
 		int count = 0;
@@ -91,6 +104,7 @@ public class Node
 		}
 		return count;
 	}
+	//Requirement 7
 	public String ListDescendants()
 	{
 		return ListDescendants(1);
@@ -108,6 +122,7 @@ public class Node
 		}
 		return result;
 	}
+	//Requirement 5
 	public String ListChildren()
 	{
 		if(childrenList.size() < 1)
@@ -120,6 +135,7 @@ public class Node
 		}		
 		return result;
 	}
+	//Requirement 4
 	public String ListAncestors()
 	{
 		String result = "";
