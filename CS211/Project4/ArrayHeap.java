@@ -21,15 +21,27 @@ public class ArrayHeap<T> implements Heap<T>
 	public void add(T obj)
 	{
 		heap[heapSize] = obj;
+		int i = heapSize;
 		heapSize++;
-		BuildHeap(heap);
+		while(comp.compare(heap[i], heap[(i-1)/2]) > 0)
+		{
+			T temp = heap[i];
+			heap[i] = heap[(i-1)/2];
+			heap[(i-1)/2] = temp;
+			i = (i-1)/2;			
+			
+		}
+
+
+		
+		
 	}
 	public T remove()
 	{
 		T highest = heap[0];
 		heapSize--;
 		heap[0] = heap[heapSize];		
-		BuildHeap(heap);
+		Heapify(heap, 0);
 		return highest;
 	}
 	public boolean isEmpty()
@@ -71,15 +83,15 @@ public class ArrayHeap<T> implements Heap<T>
 	}
 	private void BuildHeap(T[] values)
 	{
-		for(int i= values.length/2; i >=0; i--)
+		for(int i= (heapSize-1)/2; i >=0; i--)
 		{
 			Heapify(values, i);
 		}
 	}
 	private void Heapify(T[] values, int i)
 	{
-		int left = i+1;
-		int right = i+2;
+		int left = 2*i + 1;
+		int right = 2*i + 2;
 		int highest = i;
 		if((left < heapSize) && (comp.compare(values[left], values[highest]) > 0))
 		{
