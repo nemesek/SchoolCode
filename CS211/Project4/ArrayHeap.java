@@ -1,3 +1,6 @@
+// ArrayHeap.java 
+// array based implementation of the Heap Interface
+
 import java.util.*;
 public class ArrayHeap<T> implements Heap<T>
 {
@@ -6,6 +9,13 @@ public class ArrayHeap<T> implements Heap<T>
 	private T[] heap;
 	private Comparator<Object> comp;
 	
+	
+	@SuppressWarnings("unchecked")
+	public ArrayHeap(Comparator<Object> c)
+	{
+		comp = c;
+		heap = (T[])(new Object[DEFAULT_CAPACITY]); 
+	}
 	public ArrayHeap(T[] values, Comparator<Object> c)
 	{
 		heap = (T[]) (new Object[values.length*2]);
@@ -29,12 +39,7 @@ public class ArrayHeap<T> implements Heap<T>
 			heap[i] = heap[(i-1)/2];
 			heap[(i-1)/2] = temp;
 			i = (i-1)/2;			
-			
-		}
-
-
-		
-		
+		}		
 	}
 	public T remove()
 	{
@@ -53,14 +58,26 @@ public class ArrayHeap<T> implements Heap<T>
 	}
 	public boolean isFull()
 	{
-		boolean full = false;
-		if(heapSize == DEFAULT_CAPACITY)
-			full = true;
-		return full;
+		int num = heapSize + 1;
+		if(num == 0)
+			return true;
+		while(num % 2 == 0)
+		{
+			num = num /2;
+		}
+		if(num > 1)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+		
+
 	}
 	public T getTop()
-	{
-		
+	{		
 		T top = heap[0];
 		return top;
 		
@@ -75,11 +92,23 @@ public class ArrayHeap<T> implements Heap<T>
 	}
 	public void printSorted()
 	{
-		
+		System.out.println("\nhello from printSorted()");
+	}
+	//TODO for testing purposes
+	public T[] GetHeap()
+	{
+		return heap;
 	}
 	public T[] heapSort()
 	{
-		return heap;
+		T[] sortedHeap = (T[]) (new Object[heapSize]);
+		int i=0;
+		while(heapSize > 0)
+		{
+			sortedHeap[i] = this.remove();
+			i++;
+		}
+		return sortedHeap;
 	}
 	private void BuildHeap(T[] values)
 	{
