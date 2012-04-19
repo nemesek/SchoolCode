@@ -58,23 +58,10 @@ public class ArrayHeap<T> implements Heap<T>
 	}
 	public boolean isFull()
 	{
-		int num = heapSize + 1;
-		if(num == 0)
+		if (heapSize == DEFAULT_CAPACITY)
 			return true;
-		while(num % 2 == 0)
-		{
-			num = num /2;
-		}
-		if(num > 1)
-		{
-			return false;
-		}
 		else
-		{
-			return true;
-		}
-		
-
+			return false;
 	}
 	public T getTop()
 	{		
@@ -89,10 +76,67 @@ public class ArrayHeap<T> implements Heap<T>
 	public void drawHeap()
 	{
 		
+		if(heapSize > 0)
+		{
+			int num = heapSize;
+			int height = 1;
+			while(num > 1)
+			{
+				num = num/2;
+				height++;
+			}
+			int i=0;
+			for(int level=0; level <= height; level++)
+			{
+				String gap = "";
+				double numNodes = Math.pow(2, level);
+				double printGap = Math.pow(2, height);
+				
+				for(int k=0; k < printGap/numNodes; k++)
+				{
+					gap += "   ";
+				}
+				for(int j=0; j<numNodes; j++)
+				{
+					if(i < heapSize)
+					{
+						System.out.print(gap + heap[i].toString() + gap);
+						i++;
+					}
+					
+				}
+				System.out.println();
+				System.out.println();
+			}
+
+				
+		}
 	}
 	public void printSorted()
 	{
-		System.out.println("\nhello from printSorted()");
+		//System.out.println("\nhello from printSorted()");
+		T[] tempArray = (T[]) (new Object[heapSize]);
+		for(int i=0; i< tempArray.length; i++)
+		{
+			tempArray[i] = heap[i];
+		}
+		java.util.Arrays.sort(tempArray);
+		if(comp.compare(1,0) > 0)
+		{
+			for(int i=0; i< tempArray.length; i++)
+			{
+				System.out.print(tempArray[i].toString() + " ");
+			}
+		}
+		else
+		{
+			for(int i= tempArray.length -1; i>=0; i--)
+			{
+				System.out.print(tempArray[i].toString() + " ");
+			}
+		}
+		
+
 	}
 	//TODO for testing purposes
 	public T[] GetHeap()
@@ -140,6 +184,7 @@ public class ArrayHeap<T> implements Heap<T>
 			
 		}
 	}
+
 
 
 }

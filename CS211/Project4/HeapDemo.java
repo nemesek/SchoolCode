@@ -28,13 +28,16 @@ public class HeapDemo
 		}
 		heap.remove();
 		System.out.println();
+		System.out.print("Calling printSorted(): ");
+		heap.printSorted();
+		System.out.println();
 		for(int i=0; i<heap.sizeOf(); i++)
 		{
 			Integer temp = (Integer)tempArray[i];
 			System.out.print(Integer.toString(temp));
 			System.out.print(" ");
 		}
-		//heap.printSorted();
+		
 		System.out.println();
 		tempArray = heap.heapSort();
 		for(int i=0; i<tempArray.length; i++)
@@ -61,6 +64,8 @@ public class HeapDemo
 			System.out.print(" ");
 		}
 		maxHeap.remove();
+		//maxHeap.add(2);
+		//maxHeap.add(6);
 		System.out.println();
 		for(int i=0; i<maxHeap.sizeOf(); i++)
 		{
@@ -70,12 +75,17 @@ public class HeapDemo
 		}
 		maxHeap.add(4);
 		System.out.println();
+		System.out.print("Calling printSorted(): ");
+		maxHeap.printSorted();
+		System.out.println();
 		for(int i=0; i<maxHeap.sizeOf(); i++)
 		{
 			Integer temp = (Integer)tempArray2[i];
 			System.out.print(Integer.toString(temp));
 			System.out.print(" ");
 		}
+		System.out.println();
+		maxHeap.drawHeap();
 		
 		
 	}
