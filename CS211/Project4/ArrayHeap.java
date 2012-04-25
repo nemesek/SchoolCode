@@ -1,5 +1,17 @@
-// ArrayHeap.java 
-// array based implementation of the Heap Interface
+/*
+     Name: Dan Nemesek
+     Email: djnemese@olemiss.edu
+     Program Source File Name: ArrayHeap.java
+     Current Date: 4/25/2012
+     Course Information: CSci 211 - Section 01
+     Instructor: Ms. C. B. Zickos
+     Program Description: This class implements the interface in Heap.java with an array based implementation
+     takes a comparator object in its constructor and uses the comparator to determine priority
+     Sources Consulted: None
+    
+     Honor Code Statement: In keeping with the honor code policies of the University of Mississippi, the School of Engineering,      and the Department of Computer and Information Science, I affirm that I have neither given nor received assistance on this      programming assignment. This assignment represents my individual, original effort.
+                    ... My Signature is on File.
+*/ 
 
 import java.util.*;
 public class ArrayHeap<T> implements Heap<T>
@@ -33,7 +45,7 @@ public class ArrayHeap<T> implements Heap<T>
 		heap[heapSize] = obj;
 		int i = heapSize;
 		heapSize++;
-		while(comp.compare(heap[i], heap[(i-1)/2]) > 0)
+		while(i > 0 && comp.compare(heap[i], heap[(i-1)/2]) > 0)//TODO further test the i > 0 condition
 		{
 			T temp = heap[i];
 			heap[i] = heap[(i-1)/2];
@@ -112,16 +124,15 @@ public class ArrayHeap<T> implements Heap<T>
 				
 		}
 	}
-	public void printSorted()
+	public void printSorted() //prints out sorted heap with highest priority item first in the list
 	{
-		//System.out.println("\nhello from printSorted()");
 		T[] tempArray = (T[]) (new Object[heapSize]);
 		for(int i=0; i< tempArray.length; i++)
 		{
 			tempArray[i] = heap[i];
 		}
 		java.util.Arrays.sort(tempArray);
-		if(comp.compare(1,0) > 0)
+		if(comp.compare(1,0) < 0)
 		{
 			for(int i=0; i< tempArray.length; i++)
 			{
@@ -138,16 +149,18 @@ public class ArrayHeap<T> implements Heap<T>
 		
 
 	}
-	//TODO for testing purposes
+	//Added so I can demo heap without modifying elements for testing purposes
 	public T[] GetHeap()
 	{
 		return heap;
 	}
-	public T[] heapSort()
+	public T[] heapSort() //heap is sorted by highest pri item first
 	{
 		T[] sortedHeap = (T[]) (new Object[heapSize]);
-		int i=0;
-		while(heapSize > 0)
+		//int i=heapSize - 1;
+		int bound = heapSize;
+		int i = 0;
+		while(i < bound)
 		{
 			sortedHeap[i] = this.remove();
 			i++;
