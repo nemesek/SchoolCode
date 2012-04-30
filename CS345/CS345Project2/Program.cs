@@ -14,17 +14,22 @@ namespace CS345Project2
         const int DICTIONARY = 25;
         const int COLLECTION = 19976;
         static int[] categoryNTs = new int[20];
-        static Dictionary<String, decimal>[] termCategoryEstimates = new Dictionary<String, decimal>[20];
-        static Dictionary<String, decimal[]> njtBayesDictionary = new Dictionary<string, decimal[]>();
+        static Dictionary<String, decimal>[] termCategoryEstimates = new Dictionary<String, decimal>[20]; //Array of Dictionaries with term name as key and Pr(term | category) for particular category as value
+        static Dictionary<String, decimal[]> njtBayesDictionary = new Dictionary<string, decimal[]>(); //Dictionary storing all terms as keys and  their Pr(term|categories) for all categories as arrays
+        static int[] documentCategories = new int[COLLECTION]; //Store the arg max category foreach document as computed by category membership algo (FindMaxCategory())
+        static int[] assignmedDocumentCategories = new int[COLLECTION];
+        static int[][] confusionMatrix = new int[20][];
+  
         static void Main(string[] args)
         {
             Dictionary<String, ArrayList> documents = new Dictionary<string,ArrayList>();
-            ArrayList[] categories = new ArrayList[20];
-            decimal[] categoryPR = new decimal[20];
-            int[][] termNJTs = new int[DICTIONARY][];
+            ArrayList[] categories = new ArrayList[20]; //list of documents foreach category
+            decimal[] categoryPR = new decimal[20]; //Pr(category) array
+            int[][] termNJTs = new int[DICTIONARY][]; //category tf values foreach term
             //Dictionary<String, decimal[]> njtBayesDictionary = new Dictionary<string, decimal[]>();
             
             InitializeTermCategoryDictionaries();
+            InitializeConfusionMatrix();
             BuildCategoryVectors(categories); //Stores a list of documents foreach category
             CalculateCategoryProbabilities(categoryPR, categories); //Stores Pr(category) into an array
             BuildDocumentVectors(documents); //stores the terms and tfs foreach term in every doc
@@ -57,11 +62,46 @@ namespace CS345Project2
                 }
 
             }
-            ArrayList doc1;
-            documents.TryGetValue("1", out doc1);
-            int max = FindMaxCategory(doc1, categoryPR);
-            Console.WriteLine(max.ToString());
+            DocumentCategoryEstimator(documents, categoryPR);
+            Console.WriteLine("Done with DocumentCategoryEstimator()");     
             Console.WriteLine("Done");  
+
+        }
+        static private void InitializeConfusionMatrix()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                confusionMatrix[i] = new int[20];
+            }
+        }
+        static private void DocumentCategoryEstimator(Dictionary<String, ArrayList> documents, decimal[] categoryPR)
+        {
+            for (int i = 0; i < COLLECTION; i++)
+            {
+                ArrayList docTermArray;
+                int docNum = i + 1;
+                String documentID = docNum.ToString();
+                documents.TryGetValue(documentID, out docTermArray);
+                if (docTermArray != null)
+                {
+                    int max = FindMaxCategory(docTermArray, categoryPR);
+                    documentCategories[i] = max-1;
+                    if (documentCategories[i] != assignmedDocumentCategories[i])
+                    {
+                        int row = assignmedDocumentCategories[i];
+                        int column = documentCategories[i];
+                        confusionMatrix[row][column] += 1;
+                        int x = row + column; //TODO - remove just using for bp purposes
+                    }
+                    else
+                    {
+                        Console.WriteLine("Good initial estimate");
+                    }
+                }
+                else
+                    documentCategories[i] = -1;         //TODO - investigate  if this condition occurs when doing a full run
+
+            }
 
         }
         static private int FindMaxCategory(ArrayList document, decimal[] categoryPR)
@@ -81,8 +121,7 @@ namespace CS345Project2
                     njtBayesDictionary.TryGetValue(split[0], out termBayesArray);
                     if(termBayesArray != null)
                         total += (termFrequency * termBayesArray[i]);
-                    else
-                        Console.WriteLine("NULL");
+
                 }
                 total += prior;
                 if (total > maxTotal)
@@ -227,9 +266,14 @@ namespace CS345Project2
                         String[] split = strLine.Split(' ');
                         //Console.WriteLine(split[0]);
                         int temp = Convert.ToInt32(split[1]);
+                        int docNum = Convert.ToInt32(split[0]);
+                        docNum--;
+                        
+                        
                         if (temp > catNum)
                         {
                             //LinkedList<int> catList = new LinkedList<int>();
+                            assignmedDocumentCategories[docNum] = catNum;
                             ArrayList catList = new ArrayList();
                             categories[catNum] = catList;
                             catList.Add(split[0]);
@@ -237,6 +281,7 @@ namespace CS345Project2
                         }
                         else
                         {
+                            assignmedDocumentCategories[docNum] = catNum-1;
                             categories[catNum - 1].Add(split[0]);
                         }
 
