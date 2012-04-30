@@ -11,45 +11,38 @@ namespace CS345Project2
     class Program
     {
         //const int DICTIONARY = 77952;
-        const int DICTIONARY = 100;
+        const int DICTIONARY = 25;
         const int COLLECTION = 19976;
         static int[] categoryNTs = new int[20];
         static Dictionary<String, decimal>[] termCategoryEstimates = new Dictionary<String, decimal>[20];
-        
+        static Dictionary<String, decimal[]> njtBayesDictionary = new Dictionary<string, decimal[]>();
         static void Main(string[] args)
         {
             Dictionary<String, ArrayList> documents = new Dictionary<string,ArrayList>();
             ArrayList[] categories = new ArrayList[20];
             decimal[] categoryPR = new decimal[20];
             int[][] termNJTs = new int[DICTIONARY][];
-            Dictionary<String, ArrayList> bayesianDictionary = new Dictionary<string, ArrayList>();
-
+            //Dictionary<String, decimal[]> njtBayesDictionary = new Dictionary<string, decimal[]>();
+            
             InitializeTermCategoryDictionaries();
-            BuildCategoryVectors(categories);
-            CalculateCategoryProbabilities(categoryPR, categories);
-            BuildDocumentVectors(documents);
-            BuildNJTArray(termNJTs, categories, documents);
-            /*int[] njt = CalculateNJT("1", categories, documents);
-            int[] njt2 = CalculateNJT("2", categories, documents);
-            int[] njt3 = CalculateNJT("3", categories, documents);
-            decimal[] njtBayes = new decimal[20];
-            decimal[] njtBayes2 = new decimal[20];
-            decimal[] njtBayes3 = new decimal[20];
-            ComputeBayesianEstimates(njt, njtBayes);
-            ComputeBayesianEstimates(njt2, njtBayes2);
-            ComputeBayesianEstimates(njt3, njtBayes3);
-            UpdateTermCategoryEstimates(njtBayes, "1");
-            UpdateTermCategoryEstimates(njtBayes2, "2");
-            UpdateTermCategoryEstimates(njtBayes3, "3");*/
+            BuildCategoryVectors(categories); //Stores a list of documents foreach category
+            CalculateCategoryProbabilities(categoryPR, categories); //Stores Pr(category) into an array
+            BuildDocumentVectors(documents); //stores the terms and tfs foreach term in every doc
+            Console.WriteLine("Finished BuildDocumentVectors()");
+            BuildNJTArray(termNJTs, categories, documents); //jagged array -- stores an array of term frequencies foreach category foreach term in the DICTIONARY
+            Console.WriteLine("Finished BuildNJTArray()");
+
             for (int i = 0; i < DICTIONARY; i++)
             {
                 int termNum = i + 1;
                 String term = termNum.ToString();
-                int[] tempNJT = CalculateNJT(term, categories, documents);
+                int[] tempNJT = termNJTs[i];    //int[] tempNJT = CalculateNJT(term, categories, documents);
                 decimal[] tempNjtBayes = new decimal[20];
-                ComputeBayesianEstimates(tempNJT, tempNjtBayes);
-                UpdateTermCategoryEstimates(tempNjtBayes, term);
+                ComputeBayesianEstimates(tempNJT, tempNjtBayes); //stores array of Pr(Term|Category) probabilities foreach category for a term
+                njtBayesDictionary.Add(term, tempNjtBayes);
+                UpdateTermCategoryEstimates(tempNjtBayes, term); //stores term Pr(Term|Category) into category Dictionary
             }
+            Console.WriteLine("Finished UpdateTermCategoryEstimates()");
             //Print out top5 terms for each category
             for (int i = 0; i < 20; i++)
             {
@@ -64,11 +57,42 @@ namespace CS345Project2
                 }
 
             }
-
+            ArrayList doc1;
+            documents.TryGetValue("1", out doc1);
+            int max = FindMaxCategory(doc1, categoryPR);
+            Console.WriteLine(max.ToString());
             Console.WriteLine("Done");  
 
         }
-
+        static private int FindMaxCategory(ArrayList document, decimal[] categoryPR)
+        {
+            decimal maxTotal = 0;
+            int maxCategory = 0;
+            for (int i = 0; i < 20; i++)
+            {
+                decimal total = 0;
+                decimal prior = categoryPR[i];
+                for (int j = 0; j < document.Count; j++)
+                {
+                    String term = document[j].ToString();
+                    String[] split = term.Split(' ');
+                    decimal termFrequency = Convert.ToDecimal(split[1]);
+                    decimal[] termBayesArray;
+                    njtBayesDictionary.TryGetValue(split[0], out termBayesArray);
+                    if(termBayesArray != null)
+                        total += (termFrequency * termBayesArray[i]);
+                    else
+                        Console.WriteLine("NULL");
+                }
+                total += prior;
+                if (total > maxTotal)
+                {
+                    maxTotal = total;
+                    maxCategory = i + 1;
+                }
+            }
+            return maxCategory;
+        }
         static private void InitializeTermCategoryDictionaries()
         {
             for (int i = 0; i < 20; i++)
@@ -82,30 +106,20 @@ namespace CS345Project2
             for (int i = 0; i < 20; i++)
             {
                 termCategoryEstimates[i].Add(term, njtBayes[i]);
-            }
-            
+            }            
         }
+
         static private void ComputeBayesianEstimates(int[] njt, decimal[] njtBayes)
         {
             decimal result;
-            //decimal maxResult = 0;
-            //int maxCategory = 0;
             for (int i = 0; i < 20; i++)
-            {
-                
+            {                
                 decimal numerator = (decimal)(njt[i] + 1);
                 decimal denominator = (decimal)(categoryNTs[i] + DICTIONARY);
                 result = numerator / denominator;
                 njtBayes[i] = result;
-                /*if (result > maxResult)
-                {
-                    maxCategory = i + 1;
-                    maxResult = result;
-                }*/
             }
-            //Console.WriteLine("Max category: " + maxCategory.ToString());
-            //Console.WriteLine(maxResult.ToString());
-            //return maxResult;
+
         }
 
         static private void BuildNJTArray(int[][] termNJTs, ArrayList[] categories, Dictionary<String, ArrayList> documents)
@@ -113,7 +127,7 @@ namespace CS345Project2
             for (int i = 0; i < DICTIONARY; i++)
             {
                 String term = Convert.ToString(i + 1);
-                int[] njt = CalculateNJT(term, categories, documents);
+                int[] njt = CalculateNJT(term, categories, documents); //Stores term frequency (njt) foreach category foreach term
                 termNJTs[i] = njt;               
                
             }
@@ -158,7 +172,7 @@ namespace CS345Project2
             {
                 decimal numerator = categories[i].Count;
                 categoryPR[i] = numerator / COLLECTION;
-                Console.WriteLine(categoryPR[i].ToString());
+                //Console.WriteLine(categoryPR[i].ToString());
             }
         }
 
