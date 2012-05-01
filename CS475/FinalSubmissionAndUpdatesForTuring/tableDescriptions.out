@@ -1,0 +1,58 @@
+mysql> desc Administrators;
++-----------------+-------------+------+-----+---------+----------------+
+| Field           | Type        | Null | Key | Default | Extra          |
++-----------------+-------------+------+-----+---------+----------------+
+| AdministratorID | int(11)     | NO   | PRI | NULL    | auto_increment |
+| FirstName       | varchar(20) | YES  |     | NULL    |                |
+| LastName        | varchar(20) | YES  |     | NULL    |                |
++-----------------+-------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> desc Answers;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| AnswerID   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| Value      | varchar(20) | YES  |     | NULL    |                |
+| TestID     | int(11)     | NO   |     | NULL    |                |
+| QuestionID | int(11)     | NO   |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> desc Questions;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| QuestionID | int(11)     | NO   | PRI | NULL    | auto_increment |
+| Type       | varchar(20) | YES  |     | NULL    |                |
+| Value      | varchar(50) | YES  |     | NULL    |                |
+| Test       | varchar(20) | YES  |     | NULL    |                |
+| Color      | varchar(20) | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> desc Students;
++-----------------+-------------+------+-----+---------+----------------+
+| Field           | Type        | Null | Key | Default | Extra          |
++-----------------+-------------+------+-----+---------+----------------+
+| StudentID       | int(11)     | NO   | PRI | NULL    | auto_increment |
+| FirstName       | varchar(20) | YES  |     | NULL    |                |
+| LastName        | varchar(20) | YES  |     | NULL    |                |
+| Age             | int(11)     | YES  |     | NULL    |                |
+| School          | varchar(30) | YES  |     | NULL    |                |
+| RiskAssessment  | int(11)     | YES  |     | NULL    |                |
+| AdministratorID | int(11)     | NO   |     | NULL    |                |
++-----------------+-------------+------+-----+---------+----------------+
+7 rows in set (0.00 sec)
+
+mysql> desc Tests;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| TestID    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| Type      | varchar(20) | YES  |     | NULL    |                |
+| StudentID | int(11)     | NO   |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> notee;
