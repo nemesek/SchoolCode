@@ -10,8 +10,8 @@ namespace CS345Project2
 {
     class Program
     {
-        //const int DICTIONARY = 77952;
-        const int DICTIONARY = 25;
+        const int DICTIONARY = 77952;
+        //const int DICTIONARY = 25;
         const int COLLECTION = 19976;
         static int[] categoryNTs = new int[20];
         static Dictionary<String, decimal>[] termCategoryEstimates = new Dictionary<String, decimal>[20]; //Array of Dictionaries with term name as key and Pr(term | category) for particular category as value
@@ -22,6 +22,8 @@ namespace CS345Project2
   
         static void Main(string[] args)
         {
+            Console.Write(DateTime.Now.Date.ToString() + " " );
+            Console.WriteLine(DateTime.Now.TimeOfDay.ToString());
             Dictionary<String, ArrayList> documents = new Dictionary<string,ArrayList>();
             ArrayList[] categories = new ArrayList[20]; //list of documents foreach category
             decimal[] categoryPR = new decimal[20]; //Pr(category) array
@@ -51,20 +53,34 @@ namespace CS345Project2
             //Print out top5 terms for each category
             for (int i = 0; i < 20; i++)
             {
+                string file = @"C:\Users\Socrates\Documents\Visual Studio 2010\Projects\CS345Project2\CS345Project2\output.txt";
                 int cat = i+1;
-                Console.WriteLine("Category " + cat.ToString() + " top 5");
+                //Console.WriteLine("Category " + cat.ToString() + " top 20");
                 var items = (from k in termCategoryEstimates[i].Keys
                              orderby termCategoryEstimates[i][k] descending
-                             select k).Take(5);
-                foreach (String k in items)
+                             select k).Take(20);
+                using (StreamWriter writer = new StreamWriter(file, true))
                 {
-                    Console.WriteLine("{0}: {1}", k, termCategoryEstimates[i][k]);
+                    writer.WriteLine("Category " + cat.ToString() + " top 20");
+                    foreach (String k in items)
+                    {
+                        
+                        //Console.WriteLine("{0}: {1}", k, termCategoryEstimates[i][k]);
+                        writer.WriteLine("{0} : {1}", k, termCategoryEstimates[i][k]);
+
+                    }
+
                 }
+
 
             }
             DocumentCategoryEstimator(documents, categoryPR);
-            Console.WriteLine("Done with DocumentCategoryEstimator()");     
-            Console.WriteLine("Done");  
+            Console.WriteLine("Done with DocumentCategoryEstimator()");
+            decimal pAve = AveragePrecision();
+            Console.WriteLine("Average Precision: " + pAve.ToString());
+            Console.WriteLine("Done");
+            Console.Write(DateTime.Now.Date.ToString() + " ");
+            Console.WriteLine(DateTime.Now.TimeOfDay.ToString());
 
         }
         static private void InitializeConfusionMatrix()
@@ -86,23 +102,35 @@ namespace CS345Project2
                 {
                     int max = FindMaxCategory(docTermArray, categoryPR);
                     documentCategories[i] = max-1;
-                    if (documentCategories[i] != assignmedDocumentCategories[i])
-                    {
-                        int row = assignmedDocumentCategories[i];
-                        int column = documentCategories[i];
-                        confusionMatrix[row][column] += 1;
-                        int x = row + column; //TODO - remove just using for bp purposes
-                    }
-                    else
-                    {
-                        Console.WriteLine("Good initial estimate");
-                    }
+                    //update confusion matrix
+                    int row = assignmedDocumentCategories[i];
+                    int column = documentCategories[i];
+                    confusionMatrix[row][column] += 1;
+                    int x = row + column; //TODO - remove just using for bp purposes                   
+
                 }
                 else
                     documentCategories[i] = -1;         //TODO - investigate  if this condition occurs when doing a full run
 
             }
 
+        }
+        static private decimal AveragePrecision()
+        {
+            decimal pAve = 0;
+            decimal numerator = 0;
+            for (int i = 0; i < 20; i++)
+            {
+                numerator += confusionMatrix[i][i];
+                decimal denominator = 0;
+                for (int j = 0; j < 20; j++)
+                {
+                    denominator += confusionMatrix[i][j];   
+                }
+                pAve += (numerator / denominator);
+            }
+            pAve /= 20;
+            return pAve;
         }
         static private int FindMaxCategory(ArrayList document, decimal[] categoryPR)
         {
