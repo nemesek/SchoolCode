@@ -118,9 +118,10 @@ namespace CS345Project2
         static private decimal AveragePrecision()
         {
             decimal pAve = 0;
-            decimal numerator = 0;
+            
             for (int i = 0; i < 20; i++)
             {
+                decimal numerator = 0;
                 numerator += confusionMatrix[i][i];
                 decimal denominator = 0;
                 for (int j = 0; j < 20; j++)
