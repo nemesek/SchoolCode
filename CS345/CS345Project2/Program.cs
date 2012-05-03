@@ -6,12 +6,13 @@ using System.IO;
 using System.Collections;
 
 
+
 namespace CS345Project2
 {
     class Program
     {
-        const int DICTIONARY = 77952;
-        //const int DICTIONARY = 25;
+        //const int DICTIONARY = 77952;
+        const int DICTIONARY = 25;
         const int COLLECTION = 19976;
         static int[] categoryNTs = new int[20];
         static Dictionary<String, decimal>[] termCategoryEstimates = new Dictionary<String, decimal>[20]; //Array of Dictionaries with term name as key and Pr(term | category) for particular category as value
@@ -19,6 +20,14 @@ namespace CS345Project2
         static int[] documentCategories = new int[COLLECTION]; //Store the arg max category foreach document as computed by category membership algo (FindMaxCategory())
         static int[] assignmedDocumentCategories = new int[COLLECTION];
         static int[][] confusionMatrix = new int[20][];
+        static Dictionary<String, double[]> docTdfIdfVector = new Dictionary<String, double[]>();
+        static decimal[] totalTF = new decimal[DICTIONARY]; //Store all TF's
+        static Dictionary<String, double[]> termTdfIdfForEachCategory = new Dictionary<string, double[]>();
+        static Dictionary<String, double[]> tdfIdfBayes = new Dictionary<string, double[]>(); //Store the tdf-idf Pr(term| category)
+        static int[] tdfIdfDocumentCategories = new int[COLLECTION];
+        static int[][] tdfIdfConfusionMatrix = new int[20][];
+        static Dictionary<String, double>[] termTdfIdfCategoryEstimates = new Dictionary<String, double>[20];
+        
   
         static void Main(string[] args)
         {
@@ -35,9 +44,11 @@ namespace CS345Project2
             BuildCategoryVectors(categories); //Stores a list of documents foreach category
             CalculateCategoryProbabilities(categoryPR, categories); //Stores Pr(category) into an array
             BuildDocumentVectors(documents); //stores the terms and tfs foreach term in every doc
+            
             Console.WriteLine("Finished BuildDocumentVectors()");
             BuildNJTArray(termNJTs, categories, documents); //jagged array -- stores an array of term frequencies foreach category foreach term in the DICTIONARY
             Console.WriteLine("Finished BuildNJTArray()");
+            BuildTdfIdfVector(documents); //Part2
 
             for (int i = 0; i < DICTIONARY; i++)
             {
@@ -50,22 +61,206 @@ namespace CS345Project2
                 UpdateTermCategoryEstimates(tempNjtBayes, term); //stores term Pr(Term|Category) into category Dictionary
             }
             Console.WriteLine("Finished UpdateTermCategoryEstimates()");
-            //Print out top5 terms for each category
+            //Print out top20 terms for each category
+            DisplayTop20PartOne();
+            DocumentCategoryEstimator(documents, categoryPR);
+            Console.WriteLine("Done with DocumentCategoryEstimator()");
+            decimal pAve = AveragePrecision();
+            Console.WriteLine("Average Precision: " + pAve.ToString());
+            
+            //Part2           
+            Console.WriteLine("Part2");
+            ComputeTdfIdfForEachCategory(categories, documents); 
+            for(int i=0; i<DICTIONARY; i++)
+            {
+                int termID = i+1;
+                String term = termID.ToString();
+                double [] termIDFForCategory;
+                termTdfIdfForEachCategory.TryGetValue(term, out termIDFForCategory);
+                if(termIDFForCategory != null)
+                {
+
+                    ComputeTdfIdfBayesianEstimates(term, termIDFForCategory);
+                    //termTdfIdfCategoryEstimates
+                    UpdateTermTdfIdfCategoryEstimates(term, termIDFForCategory);
+                }
+
+            }
+            DisplayTop20PartTwo();
+            //Estimate max category for tdf-idf DocumentCategoryEstimator
+            TdfIdfDocumentCategoryEstimator(documents, categoryPR);
+            Console.WriteLine("Done");
+            Console.Write(DateTime.Now.Date.ToString() + " ");
+            Console.WriteLine(DateTime.Now.TimeOfDay.ToString());
+
+        }
+        //Part2
+        static private void UpdateTermTdfIdfCategoryEstimates(String term, double[] termIDFForCategory)
+        {
             for (int i = 0; i < 20; i++)
             {
-                string file = @"C:\Users\Socrates\Documents\Visual Studio 2010\Projects\CS345Project2\CS345Project2\output.txt";
-                int cat = i+1;
-                //Console.WriteLine("Category " + cat.ToString() + " top 20");
-                var items = (from k in termCategoryEstimates[i].Keys
-                             orderby termCategoryEstimates[i][k] descending
+                termTdfIdfCategoryEstimates[i].Add(term, termIDFForCategory[i]);
+            }
+        }
+        //Part2
+        static private void TdfIdfDocumentCategoryEstimator(Dictionary<String, ArrayList> documents, decimal[] categoryPR)
+        {
+            for (int i = 0; i < COLLECTION; i++)
+            {
+                ArrayList docTermArray;
+                int docNum = i + 1;
+                String documentID = docNum.ToString();
+                documents.TryGetValue(documentID, out docTermArray);
+                if (docTermArray != null)
+                {
+                    int max = FindMaxTdfIdfCategory(docTermArray, categoryPR);
+                    tdfIdfDocumentCategories[i] = max - 1;
+                    //update confusionMatrix
+                    int row = assignmedDocumentCategories[i];
+                    int column = tdfIdfDocumentCategories[i];
+                    tdfIdfConfusionMatrix[row][column] += 1;
+
+                }
+                else
+                    tdfIdfDocumentCategories[i] = -1;
+            }
+
+        }
+        //Part2
+        static private int FindMaxTdfIdfCategory(ArrayList document, decimal[] categoryPR)
+        {
+            decimal maxTotal = 0;
+            int maxCategory = 0;
+            for (int i = 0; i < 20; i++)
+            {
+                decimal total = 0;
+                decimal prior = categoryPR[i];
+                for (int j = 0; j < document.Count; j++)
+                {
+                    String term = document[j].ToString();
+                    String[] split = term.Split(' ');
+                    //int termID = Convert.ToInt32(term);
+                    //tdfIdfBayes
+                    double[] termTdfIdfBayes;
+                    tdfIdfBayes.TryGetValue(split[0], out termTdfIdfBayes);
+                    if (termTdfIdfBayes != null)
+                        total += (decimal)termTdfIdfBayes[i];
+
+                    
+                }
+                total += prior;
+                if (total > maxTotal)
+                {
+                    maxTotal = total;
+                    maxCategory = i + 1;
+                }
+            }
+            return maxCategory;
+
+        }
+        //Part2
+        static private void ComputeTdfIdfBayesianEstimates(String term, double[] termIDFForCategory)
+        {
+            double[] resultArray = new double[20];
+            double result;
+            for (int i = 0; i < termIDFForCategory.Length; i++)
+            {
+                double numerator = termIDFForCategory[i] + 1;
+                double denominator = categoryNTs[i] + DICTIONARY;
+                result = numerator / denominator;
+                resultArray[i] = result;
+            }
+            tdfIdfBayes.Add(term, resultArray);
+
+        }
+        //Part2
+        static private void ComputeTdfIdfForEachCategory(ArrayList[] categories, Dictionary<String, ArrayList> documents)
+        {
+            //static Dictionary<String, double[]> termTdfIdfForEachCategory = new Dictionary<string, double[]>();
+            for (int i = 0; i < totalTF.Length; i++)
+            {
+                int termID = i + 1;
+                String term = termID.ToString();
+                double[] termTdfIdfForCategoryj = new double[20];
+                for (int j = 0; j < 20; j++)
+                {
+                    ArrayList tempCategory = categories[j];
+                    for (int k = 0; k < tempCategory.Count; k++)
+                    {
+                        //Console.WriteLine(tempCategory[k].ToString());
+                        String doc = tempCategory[k].ToString();
+                        double[] tempDocTdfIdfVector;
+                        docTdfIdfVector.TryGetValue(doc, out tempDocTdfIdfVector);
+                        if (tempDocTdfIdfVector != null)
+                        {
+                            if (i < tempDocTdfIdfVector.Length)
+                            {
+                                termTdfIdfForCategoryj[j] += tempDocTdfIdfVector[i];
+                            }
+                            
+                        }
+                    }
+                }
+                termTdfIdfForEachCategory.Add(term, termTdfIdfForCategoryj);
+            }
+
+        }
+        //Part2
+        static private void BuildTdfIdfVector(Dictionary<String, ArrayList> documents)
+        {
+            for(int i=0; i<documents.Count;i++)
+            {
+                int num = i + 1;
+                String docNum = num.ToString();
+                ArrayList docTerms;
+                documents.TryGetValue(docNum, out docTerms);
+                if (docTerms != null)
+                {
+                    double[] docTfArray = new double[docTerms.Count];
+                    for (int j = 0; j < docTerms.Count; j++)
+                    {
+                        //Console.WriteLine(docTerms[j].ToString());
+                        String entry = docTerms[j].ToString();
+                        String[] split = entry.Split(' ');
+                        int termID = Convert.ToInt32(split[0]);
+                        int frequency = Convert.ToInt32(split[1]);
+                        termID--;
+                        if (termID < DICTIONARY)
+                        {
+                            decimal totalTermFrequency = totalTF[termID];
+                            double argument = (double)COLLECTION / (double)totalTermFrequency;
+                            double idf = Math.Log(argument);
+                            double tdfIDF = frequency * idf;
+                            docTfArray[j] = tdfIDF;
+
+                        }
+
+
+                    }
+                    docTdfIdfVector.Add(docNum, docTfArray); //tdf-idf foreach term for every document
+
+                }
+
+
+            }
+        }
+        //Part2
+        static private void DisplayTop20PartTwo()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                string file = @"C:\Users\Socrates\Documents\Visual Studio 2010\Projects\CS345Project2\CS345Project2\output2.txt";
+                int cat = i + 1;
+
+                var items = (from k in termTdfIdfCategoryEstimates[i].Keys
+                             orderby termTdfIdfCategoryEstimates[i][k] descending
                              select k).Take(20);
                 using (StreamWriter writer = new StreamWriter(file, true))
                 {
                     writer.WriteLine("Category " + cat.ToString() + " top 20");
                     foreach (String k in items)
                     {
-                        
-                        //Console.WriteLine("{0}: {1}", k, termCategoryEstimates[i][k]);
+
                         writer.WriteLine("{0} : {1}", k, termCategoryEstimates[i][k]);
 
                     }
@@ -74,20 +269,39 @@ namespace CS345Project2
 
 
             }
-            DocumentCategoryEstimator(documents, categoryPR);
-            Console.WriteLine("Done with DocumentCategoryEstimator()");
-            decimal pAve = AveragePrecision();
-            Console.WriteLine("Average Precision: " + pAve.ToString());
-            Console.WriteLine("Done");
-            Console.Write(DateTime.Now.Date.ToString() + " ");
-            Console.WriteLine(DateTime.Now.TimeOfDay.ToString());
 
+        }
+        static private void DisplayTop20PartOne()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                string file = @"C:\Users\Socrates\Documents\Visual Studio 2010\Projects\CS345Project2\CS345Project2\output.txt";
+                int cat = i + 1;
+
+                var items = (from k in termCategoryEstimates[i].Keys
+                             orderby termCategoryEstimates[i][k] descending
+                             select k).Take(20);
+                using (StreamWriter writer = new StreamWriter(file, true))
+                {
+                    writer.WriteLine("Category " + cat.ToString() + " top 20");
+                    foreach (String k in items)
+                    {
+
+                        writer.WriteLine("{0} : {1}", k, termCategoryEstimates[i][k]);
+
+                    }
+
+                }
+
+
+            }
         }
         static private void InitializeConfusionMatrix()
         {
             for (int i = 0; i < 20; i++)
             {
                 confusionMatrix[i] = new int[20];
+                tdfIdfConfusionMatrix[i] = new int[20];
             }
         }
         static private void DocumentCategoryEstimator(Dictionary<String, ArrayList> documents, decimal[] categoryPR)
@@ -166,6 +380,7 @@ namespace CS345Project2
             for (int i = 0; i < 20; i++)
             {
                 termCategoryEstimates[i] = new Dictionary<String, decimal>();
+                termTdfIdfCategoryEstimates[i] = new Dictionary<String, double>();
             }
         }
 
@@ -222,9 +437,13 @@ namespace CS345Project2
                             String[] split = element.Split(' ');
                             if(String.Compare(split[0], term) == 0)
                             {
+                                int termID = Convert.ToInt32(term);
+                                termID--;
                                 int frequency = Convert.ToInt32(split[1]);
                                 njt[i] += frequency;
                                 categoryNTs[i] += frequency;
+                                totalTF[termID] += frequency;
+                                k = temp.Count;
                                 
                             }
                         }
