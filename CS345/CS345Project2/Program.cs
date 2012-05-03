@@ -89,10 +89,31 @@ namespace CS345Project2
             DisplayTop20PartTwo();
             //Estimate max category for tdf-idf DocumentCategoryEstimator
             TdfIdfDocumentCategoryEstimator(documents, categoryPR);
+            decimal pAve2 = AveragePrecision2();
+            Console.WriteLine("Average Precision2: " + pAve2.ToString());
             Console.WriteLine("Done");
             Console.Write(DateTime.Now.Date.ToString() + " ");
             Console.WriteLine(DateTime.Now.TimeOfDay.ToString());
 
+        }
+        //Part2
+        static private decimal AveragePrecision2()
+        {
+            decimal pAve = 0;
+
+            for (int i = 0; i < 20; i++)
+            {
+                decimal numerator = 0;
+                numerator += tdfIdfConfusionMatrix[i][i];
+                decimal denominator = 0;
+                for (int j = 0; j < 20; j++)
+                {
+                    denominator += tdfIdfConfusionMatrix[i][j];
+                }
+                pAve += (numerator / denominator);
+            }
+            pAve /= 20;
+            return pAve;
         }
         //Part2
         static private void UpdateTermTdfIdfCategoryEstimates(String term, double[] termIDFForCategory)
@@ -261,7 +282,7 @@ namespace CS345Project2
                     foreach (String k in items)
                     {
 
-                        writer.WriteLine("{0} : {1}", k, termCategoryEstimates[i][k]);
+                        writer.WriteLine("{0} : {1}", k, termTdfIdfCategoryEstimates[i][k]);
 
                     }
 
