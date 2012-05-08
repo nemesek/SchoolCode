@@ -48,7 +48,6 @@ namespace DictionaryScratch
             {
                 int termNum = i + 1;
                 String term = termNum.ToString();
-                //int[] tempNJT = termNJTs[i];    //int[] tempNJT = CalculateNJT(term, categories, documents);
                 int[] tempNJT;
                 categoryTermFrequencies.TryGetValue(term, out tempNJT);
                 if (tempNJT != null)
@@ -67,7 +66,6 @@ namespace DictionaryScratch
             Console.WriteLine("Average Precision: " + pAve.ToString());
             //Part2
             BuildTdfIdfVector();
-            //ComputeTdfIdfForEachCategory();
             for (int i = 0; i < DICTIONARY; i++)
             {
                 int termID = i + 1;
@@ -77,12 +75,10 @@ namespace DictionaryScratch
                 if (termIDFForCategory != null)
                 {
                     ComputeTdfIdfBayesianEstimates(term, termIDFForCategory);
-                    //termTdfIdfCategoryEstimates
                     UpdateTermTdfIdfCategoryEstimates(term, termIDFForCategory);
                 }
             }
             DisplayTop20(termTdfIdfCategoryEstimates, 2);
-            //Estimate max category for tdf-idf DocumentCategoryEstimator
             TdfIdfDocumentCategoryEstimator();
             decimal pAve2 = AveragePrecision(tdfIdfConfusionMatrix);
             Console.WriteLine("Average Precision2: " + pAve2.ToString());
@@ -466,46 +462,7 @@ namespace DictionaryScratch
 
 
             }
-        }
-        static private void ComputeTdfIdfForEachCategory()
-        {
-            //for (int i = 0; i < totalTF.Length; i++)
-            for(int i=0; i < termDocumentCount.Length; i++)
-            {
-                int termID = i + 1;
-                String term = termID.ToString();
-                decimal[] termTdfIdfForCategoryj = new decimal[20];
-                for (int j = 0; j < 20; j++)
-                {
-                    ArrayList tempCategory = categories[j];
-                    for (int k = 0; k < tempCategory.Count; k++)
-                    {
-                        //Console.WriteLine(tempCategory[k].ToString());
-                        String doc = tempCategory[k].ToString();
-                        decimal[] tempDocTdfIdfVector;
-                        docTdfIdfVector.TryGetValue(doc, out tempDocTdfIdfVector);
-                        if (tempDocTdfIdfVector != null)
-                        {
-                            ArrayList docTermArrayList;
-                            docTerms.TryGetValue(doc, out docTermArrayList);
-                            if (docTermArrayList != null)
-                            {
-                                if(docTermArrayList.Contains(term))
-                                {
-                                    if(i < tempDocTdfIdfVector.Length)
-                                     termTdfIdfForCategoryj[j] += tempDocTdfIdfVector[i];
-                                }
-                            }
- 
-                         }
-
-                    }
-                 }
-                
-                termTdfIdfForEachCategory.Add(term, termTdfIdfForCategoryj);
-            }
-
-        }
+        }        
         static private void ComputeTdfIdfBayesianEstimates(String term, decimal[] termIDFForCategory)
         {
             decimal[] resultArray = new decimal[20];
