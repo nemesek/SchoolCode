@@ -13,6 +13,7 @@ namespace DictionaryScratch
         const int COLLECTION = 19976;
         static Dictionary<String, ArrayList> documents = new Dictionary<string, ArrayList>();
         static Dictionary<String, ArrayList> docTerms = new Dictionary<string, ArrayList>();
+        static Dictionary<String, String> vocabTerms = new Dictionary<string, string>();
         static ArrayList[] categories = new ArrayList[20]; //list of documents foreach category
         static Dictionary<String, int[]> categoryTermFrequencies = new Dictionary<string, int[]>(); //termfrequency foreach term foreach term
         static int[] assignedDocumentCategories = new int[COLLECTION];
@@ -36,6 +37,7 @@ namespace DictionaryScratch
         {
             Console.Write(DateTime.Now.Date.ToString() + " ");
             Console.WriteLine(DateTime.Now.TimeOfDay.ToString());
+            BuildTermDictionary();
             InitializeTermCategoryDictionaries();
             InitializeConfusionMatrix();
             BuildCategoryVectors(); //Stores a list of documents foreach category
@@ -87,6 +89,27 @@ namespace DictionaryScratch
             Console.WriteLine("Done");
             Console.Write(DateTime.Now.Date.ToString() + " ");
             Console.WriteLine(DateTime.Now.TimeOfDay.ToString());
+        }
+        static void BuildTermDictionary()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(@"C:\Users\Socrates\Desktop\IBack\School\CS 345\Project2\csci345_pj2\vocabulary"))
+                {
+                    String strLine;
+                    int lineNum = 1;
+                    while ((strLine = sr.ReadLine()) != null)
+                    {
+                        //String[] split = strLine.Split(' ');
+                        vocabTerms.Add(lineNum.ToString(), strLine);
+                        lineNum++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace.ToString());
+            }
         }
         static void BuildCategoryVectors()
         {
@@ -305,8 +328,9 @@ namespace DictionaryScratch
                     writer.WriteLine("Category " + cat.ToString() + " top 20");
                     foreach (String k in items)
                     {
-
-                        writer.WriteLine("{0} : {1}", k, tce[i][k]);
+                        String term;
+                        vocabTerms.TryGetValue(k, out term);                        
+                        writer.WriteLine("{0} : {1} : {2}", k,term,  tce[i][k]);
 
                     }
 
