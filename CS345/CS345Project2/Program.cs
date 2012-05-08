@@ -15,7 +15,7 @@ namespace DictionaryScratch
         static Dictionary<String, ArrayList> docTerms = new Dictionary<string, ArrayList>();
         static Dictionary<String, String> vocabTerms = new Dictionary<string, string>();
         static ArrayList[] categories = new ArrayList[20]; //list of documents foreach category
-        static Dictionary<String, int[]> categoryTermFrequencies = new Dictionary<string, int[]>(); //termfrequency foreach term foreach term
+        static Dictionary<String, int[]> categoryTermFrequencies = new Dictionary<string, int[]>(); //termfrequency foreach category foreach term
         static int[] assignedDocumentCategories = new int[COLLECTION];
         static Dictionary<String, decimal>[] termCategoryEstimates = new Dictionary<String, decimal>[20]; //Array of Dictionaries with term name as key and Pr(term | category) for particular category as value
         static Dictionary<String, decimal>[] termTdfIdfCategoryEstimates = new Dictionary<String, decimal>[20]; //Stores the tdfidf foreach category foreach term
