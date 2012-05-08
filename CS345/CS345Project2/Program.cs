@@ -12,11 +12,12 @@ namespace DictionaryScratch
         const int DICTIONARY = 77952;
         const int COLLECTION = 19976;
         static Dictionary<String, ArrayList> documents = new Dictionary<string, ArrayList>();
+        static Dictionary<String, ArrayList> docTerms = new Dictionary<string, ArrayList>();
         static ArrayList[] categories = new ArrayList[20]; //list of documents foreach category
         static Dictionary<String, int[]> categoryTermFrequencies = new Dictionary<string, int[]>(); //termfrequency foreach term foreach term
         static int[] assignedDocumentCategories = new int[COLLECTION];
         static Dictionary<String, decimal>[] termCategoryEstimates = new Dictionary<String, decimal>[20]; //Array of Dictionaries with term name as key and Pr(term | category) for particular category as value
-        static Dictionary<String, decimal>[] termTdfIdfCategoryEstimates = new Dictionary<String, decimal>[20];
+        static Dictionary<String, decimal>[] termTdfIdfCategoryEstimates = new Dictionary<String, decimal>[20]; //Stores the tdfidf foreach category foreach term
         static int[][] tdfIdfConfusionMatrix = new int[20][];
         static int[][] confusionMatrix = new int[20][];
         static decimal[] categoryPR = new decimal[20]; //Pr(category) array
@@ -25,8 +26,8 @@ namespace DictionaryScratch
         static int[] documentCategories = new int[COLLECTION]; //Store the arg max category foreach document as computed by category membership algo (FindMaxCategory())
         //Part2 Specific structures
         static Dictionary<String, decimal[]> docTdfIdfVector = new Dictionary<String, decimal[]>();
-        static decimal[] totalTF = new decimal[DICTIONARY]; //Store all TF's
-        static Dictionary<String, decimal[]> termTdfIdfForEachCategory = new Dictionary<string, decimal[]>();
+        //static decimal[] totalTF = new decimal[DICTIONARY]; //Store all TF's
+        static Dictionary<String, decimal[]> termTdfIdfForEachCategory = new Dictionary<String, decimal[]>();
         static Dictionary<String, decimal[]> tdfIdfBayes = new Dictionary<string, decimal[]>(); //Store the tdf-idf Pr(term| category)
         static decimal[] termDocumentCount = new decimal[DICTIONARY];
         static int[] tdfIdfDocumentCategories = new int[COLLECTION];
@@ -64,7 +65,7 @@ namespace DictionaryScratch
             Console.WriteLine("Average Precision: " + pAve.ToString());
             //Part2
             BuildTdfIdfVector();
-            ComputeTdfIdfForEachCategory();
+            //ComputeTdfIdfForEachCategory();
             for (int i = 0; i < DICTIONARY; i++)
             {
                 int termID = i + 1;
@@ -141,6 +142,17 @@ namespace DictionaryScratch
                     {
                         String[] split = strLine.Split(' ');
                         ArrayList temp;
+                        ArrayList docTermsTemp;
+                        if (docTerms.TryGetValue(split[1], out docTermsTemp))
+                        {
+                            docTermsTemp.Add(split[0]);
+                        }
+                        else
+                        {
+                            docTermsTemp = new ArrayList();
+                            docTermsTemp.Add(split[0]);
+                            docTerms.Add(split[1], docTermsTemp);
+                        }
                         int[] catTermFrequencyArray;
                         if (documents.TryGetValue(split[1], out temp))
                         {
@@ -155,13 +167,14 @@ namespace DictionaryScratch
                                 catTermFrequencyArray[categoryID] += termFrequency;
                                 int termID = Convert.ToInt32(split[0]);
                                 termID--;
-                                totalTF[termID] += termFrequency;
+                                //totalTF[termID] += termFrequency;
                                 categoryNTs[categoryID] += termFrequency;
                                 termDocumentCount[termID] += 1;
 
                             }
                             else
                             {
+                                
                                 catTermFrequencyArray = new int[20];
                                 int termFrequency = Convert.ToInt32(split[2]);
                                 int docID = Convert.ToInt32(split[1]);
@@ -171,7 +184,7 @@ namespace DictionaryScratch
                                 categoryTermFrequencies.Add(split[0], catTermFrequencyArray);
                                 int termID = Convert.ToInt32(split[0]);
                                 termID--;
-                                totalTF[termID] += termFrequency;
+                                //totalTF[termID] += termFrequency;
                                 categoryNTs[categoryID] += termFrequency;
                                 termDocumentCount[termID] += 1;
 
@@ -179,6 +192,7 @@ namespace DictionaryScratch
                         }
                         else
                         {
+                            
                             ArrayList docList = new ArrayList();
                             docList.Add(split[0] + " " + split[2]);
                             documents.Add(split[1], docList);
@@ -192,7 +206,7 @@ namespace DictionaryScratch
                                 catTermFrequencyArray[categoryID] += termFrequency;
                                 int termID = Convert.ToInt32(split[0]);
                                 termID--;
-                                totalTF[termID] += termFrequency;
+                                //totalTF[termID] += termFrequency;
                                 categoryNTs[categoryID] += termFrequency;
                                 termDocumentCount[termID] += 1;
                             }
@@ -207,7 +221,7 @@ namespace DictionaryScratch
                                 categoryTermFrequencies.Add(split[0], catTermFrequencyArray);
                                 int termID = Convert.ToInt32(split[0]);
                                 termID--;
-                                totalTF[termID] += termFrequency;
+                                //totalTF[termID] += termFrequency;
                                 categoryNTs[categoryID] += termFrequency;
                                 termDocumentCount[termID] += 1;
                             }
@@ -401,6 +415,22 @@ namespace DictionaryScratch
                             decimal idf = (decimal)Math.Log(argument);
                             decimal tdfIDF = frequency * idf;
                             docTfArray[j] = tdfIDF;
+                            //Added
+                            int docID = Convert.ToInt32(docNum);
+                            docID--;
+                            int category = assignedDocumentCategories[docID];
+                            decimal[] tempTermCategoryTdfIdf;
+                            termTdfIdfForEachCategory.TryGetValue(split[0], out tempTermCategoryTdfIdf);
+                            if (tempTermCategoryTdfIdf != null)
+                            {
+                                tempTermCategoryTdfIdf[category] += tdfIDF;
+                            }
+                            else
+                            {
+                                tempTermCategoryTdfIdf = new decimal[20];
+                                termTdfIdfForEachCategory.Add(split[0], tempTermCategoryTdfIdf);
+                            }
+   
                             
                         }
 
@@ -415,7 +445,8 @@ namespace DictionaryScratch
         }
         static private void ComputeTdfIdfForEachCategory()
         {
-            for (int i = 0; i < totalTF.Length; i++)
+            //for (int i = 0; i < totalTF.Length; i++)
+            for(int i=0; i < termDocumentCount.Length; i++)
             {
                 int termID = i + 1;
                 String term = termID.ToString();
@@ -431,14 +462,22 @@ namespace DictionaryScratch
                         docTdfIdfVector.TryGetValue(doc, out tempDocTdfIdfVector);
                         if (tempDocTdfIdfVector != null)
                         {
-                            if (i < tempDocTdfIdfVector.Length)
+                            ArrayList docTermArrayList;
+                            docTerms.TryGetValue(doc, out docTermArrayList);
+                            if (docTermArrayList != null)
                             {
-                                termTdfIdfForCategoryj[j] += tempDocTdfIdfVector[i];
+                                if(docTermArrayList.Contains(term))
+                                {
+                                    if(i < tempDocTdfIdfVector.Length)
+                                     termTdfIdfForCategoryj[j] += tempDocTdfIdfVector[i];
+                                }
                             }
+ 
+                         }
 
-                        }
                     }
-                }
+                 }
+                
                 termTdfIdfForEachCategory.Add(term, termTdfIdfForCategoryj);
             }
 
@@ -451,9 +490,10 @@ namespace DictionaryScratch
             //for (int i = 0; i < termDocumentCount.Length; i++)
             for (int i = 0; i < termIDFForCategory.Length; i++)
             {
-                decimal numerator = termIDFForCategory[i] + 1;
+                decimal numerator = (decimal)termIDFForCategory[i] + 1;
                 //decimal numerator = termDocumentCount[i] + 1;
-                decimal denominator = categoryNTs[i] + DICTIONARY;
+                decimal denominator = (decimal)categoryNTs[i] + DICTIONARY;
+                //decimal denominator = (decimal)categoryNTs[i];
                 result = numerator / denominator;
                 resultArray[i] = result;
             }
@@ -489,8 +529,7 @@ namespace DictionaryScratch
                     tdfIdfDocumentCategories[i] = -1;
 
             }
-        }
-        
+        }        
         static private int FindMaxTdfIdfCategory(ArrayList document, decimal[] categoryPR)
         {
             decimal maxTotal = 0;
@@ -503,12 +542,11 @@ namespace DictionaryScratch
                 {
                     String term = document[j].ToString();
                     String[] split = term.Split(' ');
-                    //int termID = Convert.ToInt32(term);
-                    //tdfIdfBayes
                     decimal[] termTdfIdfBayes;
+                    decimal termFrequency = Convert.ToDecimal(split[1]);
                     tdfIdfBayes.TryGetValue(split[0], out termTdfIdfBayes);
                     if (termTdfIdfBayes != null)
-                        total += (decimal)termTdfIdfBayes[i];
+                        total += ((decimal)termTdfIdfBayes[i] * termFrequency);
 
                     
                 }
