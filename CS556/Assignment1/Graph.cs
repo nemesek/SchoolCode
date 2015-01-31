@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 using System.Linq;
 
 namespace Assignment1
-{
+{   
+    // Do the labels have to be unique for vertices?
+    // If the labels aren't unique how do we know if a vertex passed in as an arg to HasVertex is the same?  By Reference?  By its neighbors?
+    // What does it mean for an edge to have a label?
     public class Graph<T>
     {
         private List<Tuple<Vertex<T>, List<Vertex<T>>>> _adjacencyList = new List<Tuple<Vertex<T>, List<Vertex<T>>>>();
