@@ -10,10 +10,7 @@ namespace Assignment1
     public class Graph<T>
     {
         private List<Tuple<Vertex<T>, List<Vertex<T>>>> _adjacencyList = new List<Tuple<Vertex<T>, List<Vertex<T>>>>();
-        public Graph()
-        {
-
-        }
+        public Graph() {}
 
         public bool IsEmpty
         {
@@ -24,6 +21,7 @@ namespace Assignment1
         public Graph<T> AddVertex(Vertex<T> vertex, T label)
         {
             vertex.Label = label;
+            // todo: check for dupes if that is a requirement
             var tupleToAdd = new Tuple<Vertex<T>, List<Vertex<T>>>(vertex, new List<Vertex<T>>());
             _adjacencyList.Add(tupleToAdd);
             return this;
@@ -31,11 +29,7 @@ namespace Assignment1
 
         public Graph<T> RemoveVertex(Vertex<T> vertex)
         {
-            // todo: delete all edges
-            var vertexToRemove = _adjacencyList
-                .Where(t => t.Item1.Label.Equals(vertex.Label))
-                .SingleOrDefault();
-
+             var vertexToRemove = this.GetVertexTuple(vertex.Label);
             if (vertexToRemove != null) _adjacencyList.Remove(vertexToRemove);
             
             return this;
@@ -44,43 +38,22 @@ namespace Assignment1
 
         public Graph<T> UpdateVertex(Vertex<T> vertex, T label)
         {
-            var vertexToUpdate = _adjacencyList
-                .Where(t => t.Item1.Label.Equals(vertex.Label))
-                .SingleOrDefault();
-
-            if (vertexToUpdate != null)
-            {
-                vertexToUpdate.Item1.Label = label;
-            }
-
+            var vertexToUpdate = this.GetVertexTuple(vertex.Label);
+            if (vertexToUpdate != null) vertexToUpdate.Item1.Label = label;
             return this;
         }
 
         public T GetVertex(Vertex<T> vertex)
         {
-            var vertexToGet = this.GetVertex(vertex.Label);
+            var vertexToGet = this.GetVertexTuple(vertex.Label);
             if (vertexToGet == null) return default(T);
             return vertexToGet.Item1.Label;
 
         }
 
-        private Tuple<Vertex<T>, List<Vertex<T>>> GetVertex(T label)
-        {
-            var vertexToGet = _adjacencyList
-                .Where(t => t.Item1.Label.Equals(label))
-                .SingleOrDefault();
-
-            return vertexToGet;
-        }
-
         public bool HasVertex(Vertex<T> vertex)
         {
-
-            var hasVertex = _adjacencyList
-                .Where(t => t.Item1.Label.Equals(vertex.Label))
-                .SingleOrDefault() != null ? true : false;
-
-            return hasVertex;
+            return this.GetVertexTuple(vertex.Label) != null ? true : false;
         }
 
         public IEnumerable<Vertex<T>> AllVertices()
@@ -92,10 +65,10 @@ namespace Assignment1
 
         public Graph<T> AddEdge(Vertex<T> vertex1, Vertex<T> vertex2)
         {
-            var source = this.GetVertex(vertex1.Label);
+            var source = this.GetVertexTuple(vertex1.Label);
             if (source == null) return this;    // todo: figure out what to return
 
-            var destination = this.GetVertex(vertex2.Label);
+            var destination = this.GetVertexTuple(vertex2.Label);
             if (destination == null) return this;
 
             source.Item2.Add(vertex2);
@@ -105,13 +78,24 @@ namespace Assignment1
 
         public bool HasEdge(Vertex<T> vertex1, Vertex<T> vertex2)
         {
-            var source = this.GetVertex(vertex1.Label);
+            var source = this.GetVertexTuple(vertex1.Label);
             if(source == null) return false;
 
-            var destination = this.GetVertex(vertex2.Label);
+            var destination = this.GetVertexTuple(vertex2.Label);
             if (destination == null) return false;
 
             return source.Item2.Where(v => v.Label.Equals(vertex2.Label)).Count() > 0;
         }
+
+        private Tuple<Vertex<T>, List<Vertex<T>>> GetVertexTuple(T label)
+        {
+            var vertexToGet = _adjacencyList
+                .Where(t => t.Item1.Label.Equals(label))
+                .SingleOrDefault();
+
+            return vertexToGet;
+        }
+
+        
     }
 }
