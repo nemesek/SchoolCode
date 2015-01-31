@@ -10,6 +10,7 @@ namespace Assignment1
     // Do the labels have to be unique for vertices?
     // If the labels aren't unique how do we know if a vertex passed in as an arg to HasVertex is the same?  By Reference?  By its neighbors?
     // What does it mean for an edge to have a label?
+    // Do the labels for the edge have to be of the same type as the label for the Vertices?
     public class Graph<T>
     {
         private List<Tuple<Vertex<T>, List<Vertex<T>>>> _adjacencyList = new List<Tuple<Vertex<T>, List<Vertex<T>>>>();
@@ -78,6 +79,8 @@ namespace Assignment1
             return this;
             
         }
+
+
 
         public bool HasEdge(Vertex<T> vertex1, Vertex<T> vertex2)
         {
