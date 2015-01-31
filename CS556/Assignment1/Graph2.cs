@@ -76,23 +76,32 @@ namespace Assignment1
             
         }
 
-         public Graph2<T> RemoveEdge(Vertex<T> vertex1, Vertex<T> vertex2)
+        public Graph2<T> RemoveEdge(Vertex<T> vertex1, Vertex<T> vertex2)
         {
-             var edgeToRemove = _edges.Where(e => _edgeFilter(e, vertex1,vertex2)).SingleOrDefault();
+             var edgeToRemove = _edges
+                 .Where(e => _edgeFilter(e, vertex1,vertex2))
+                 .SingleOrDefault();
+
              if (edgeToRemove != null) _edges.Remove(edgeToRemove);
              return this;
         }
 
         public Graph2<T> UpdateEdge(Vertex<T> vertex1, Vertex<T> vertex2, T label)
-         {
-            var edgeToUpdate = _edges.Where(e => _edgeFilter(e, vertex1, vertex2)).SingleOrDefault();
+        {
+            var edgeToUpdate = _edges
+                .Where(e => _edgeFilter(e, vertex1, vertex2))
+                .SingleOrDefault();
+
             if(edgeToUpdate != null) edgeToUpdate.Label = label;
             return this;        
          }
 
         public T GetEdge(Vertex<T> vertex1, Vertex<T> vertex2)
         {
-            var edge = _edges.Where(e => _edgeFilter(e, vertex1, vertex2)).SingleOrDefault();
+            var edge = _edges
+                .Where(e => _edgeFilter(e, vertex1, vertex2))
+                .SingleOrDefault();
+
             return edge != null ? edge.Label : default(T);
         }
 
