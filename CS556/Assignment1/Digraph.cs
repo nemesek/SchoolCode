@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assignment1
 {
     public class Digraph<T>
     {
-        private List<Vertex<T>> _vertices = new List<Vertex<T>>();
-        private List<Edge<T>> _edges = new List<Edge<T>>();
-        private Func<Edge<T>, Vertex<T>, Vertex<T>, bool> _edgeFilter = (e, v1, v2) => e.Source.Label.Equals(v1.Label) && e.Destination.Label.Equals(v2.Label);
+        private readonly List<Vertex<T>> _vertices = new List<Vertex<T>>();
+        private readonly List<Edge<T>> _edges = new List<Edge<T>>();
+        private readonly Func<Edge<T>, Vertex<T>, Vertex<T>, bool> _edgeFilter = (e, v1, v2) => e.Source.Label.Equals(v1.Label) && e.Destination.Label.Equals(v2.Label);
         public Digraph() {}
 
         public bool IsEmpty
@@ -47,14 +45,12 @@ namespace Assignment1
         public T GetVertex(Vertex<T> vertex)
         {
             var vertexToGet = this.GetVertex(vertex.Label);
-            if (vertexToGet == null) return default(T);
-            return vertexToGet.Label;
-
+            return vertexToGet == null ? default(T) : vertexToGet.Label;
         }
 
         public bool HasVertex(Vertex<T> vertex)
         {
-            return this.GetVertex(vertex.Label) != null ? true : false;
+            return this.GetVertex(vertex.Label) != null;
         }
 
         public IEnumerable<Vertex<T>> AllVertices()
@@ -78,9 +74,7 @@ namespace Assignment1
 
         public Digraph<T> RemoveEdge(Vertex<T> vertex1, Vertex<T> vertex2)
         {
-             var edgeToRemove = _edges
-                 .Where(e => _edgeFilter(e, vertex1,vertex2))
-                 .SingleOrDefault();
+             var edgeToRemove = _edges.SingleOrDefault(e => _edgeFilter(e, vertex1,vertex2));
 
              if (edgeToRemove != null) _edges.Remove(edgeToRemove);
              return this;
@@ -88,9 +82,7 @@ namespace Assignment1
 
         public Digraph<T> UpdateEdge(Vertex<T> vertex1, Vertex<T> vertex2, T label)
         {
-            var edgeToUpdate = _edges
-                .Where(e => _edgeFilter(e, vertex1, vertex2))
-                .SingleOrDefault();
+            var edgeToUpdate = _edges.SingleOrDefault(e => _edgeFilter(e, vertex1, vertex2));
 
             if(edgeToUpdate != null) edgeToUpdate.Label = label;
             return this;        
@@ -98,9 +90,7 @@ namespace Assignment1
 
         public T GetEdge(Vertex<T> vertex1, Vertex<T> vertex2)
         {
-            var edge = _edges
-                .Where(e => _edgeFilter(e, vertex1, vertex2))
-                .SingleOrDefault();
+            var edge = _edges.SingleOrDefault(e => _edgeFilter(e, vertex1, vertex2));
 
             return edge != null ? edge.Label : default(T);
         }
@@ -120,9 +110,7 @@ namespace Assignment1
 
         private Vertex<T> GetVertex(T label)
         {
-            var vertexToGet = _vertices
-                .Where(v => v.Label.Equals(label))
-                .SingleOrDefault();
+            var vertexToGet = _vertices.SingleOrDefault(v => v.Label.Equals(label));
 
             return vertexToGet;
         }     
