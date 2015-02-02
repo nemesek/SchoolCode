@@ -10,7 +10,7 @@ namespace Assignment1
     {
         static void Main(string[] args)
         {
-            var graph = new Graph2<int>();
+            var graph = new Digraph<int>();
             var vertex = new Vertex<int>();
             graph.AddVertex(vertex, 5);
             Console.WriteLine(graph.IsEmpty);  // False

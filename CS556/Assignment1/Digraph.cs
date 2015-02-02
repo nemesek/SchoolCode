@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Assignment1
 {
-    public class Graph2<T>
+    public class Digraph<T>
     {
         private List<Vertex<T>> _vertices = new List<Vertex<T>>();
         private List<Edge<T>> _edges = new List<Edge<T>>();
         private Func<Edge<T>, Vertex<T>, Vertex<T>, bool> _edgeFilter = (e, v1, v2) => e.Source.Label.Equals(v1.Label) && e.Destination.Label.Equals(v2.Label);
-        public Graph2() {}
+        public Digraph() {}
 
         public bool IsEmpty
         {
@@ -19,7 +19,7 @@ namespace Assignment1
 
         }
 
-        public Graph2<T> AddVertex(Vertex<T> vertex, T label)
+        public Digraph<T> AddVertex(Vertex<T> vertex, T label)
         {
             vertex.Label = label;
             // todo: check for dupes if that is a requirement
@@ -28,7 +28,7 @@ namespace Assignment1
             return this;
         }
 
-        public Graph2<T> RemoveVertex(Vertex<T> vertex)
+        public Digraph<T> RemoveVertex(Vertex<T> vertex)
         {
              var vertexToRemove = this.GetVertex(vertex.Label);
             if (vertexToRemove != null) _vertices.Remove(vertexToRemove);
@@ -37,7 +37,7 @@ namespace Assignment1
         }
 
 
-        public Graph2<T> UpdateVertex(Vertex<T> vertex, T label)
+        public Digraph<T> UpdateVertex(Vertex<T> vertex, T label)
         {
             var vertexToUpdate = this.GetVertex(vertex.Label);
             if (vertexToUpdate != null) vertexToUpdate.Label = label;
@@ -62,7 +62,7 @@ namespace Assignment1
             return _vertices.ToList();
         }
 
-        public Graph2<T> AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, T label)
+        public Digraph<T> AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, T label)
         {
             var source = this.GetVertex(vertex1.Label);
             if (source == null) return this;    // todo: figure out what to return
@@ -76,7 +76,7 @@ namespace Assignment1
             
         }
 
-        public Graph2<T> RemoveEdge(Vertex<T> vertex1, Vertex<T> vertex2)
+        public Digraph<T> RemoveEdge(Vertex<T> vertex1, Vertex<T> vertex2)
         {
              var edgeToRemove = _edges
                  .Where(e => _edgeFilter(e, vertex1,vertex2))
@@ -86,7 +86,7 @@ namespace Assignment1
              return this;
         }
 
-        public Graph2<T> UpdateEdge(Vertex<T> vertex1, Vertex<T> vertex2, T label)
+        public Digraph<T> UpdateEdge(Vertex<T> vertex1, Vertex<T> vertex2, T label)
         {
             var edgeToUpdate = _edges
                 .Where(e => _edgeFilter(e, vertex1, vertex2))
