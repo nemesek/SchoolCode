@@ -8,7 +8,7 @@ namespace Assignment1
     {
         private readonly List<Vertex<Tvertex, Tvlabel>> _vertices = new List<Vertex<Tvertex,Tvlabel>>();
         private readonly List<Edge<Telabel, Tvertex,Tvlabel>> _edges = new List<Edge<Telabel, Tvertex, Tvlabel>>();
-        private readonly Func<Edge<Telabel, Tvertex, Tvlabel>, Vertex<Tvertex, Tvlabel>, Vertex<Tvertex, Tvlabel>, bool> _edgeFilter = (e, v1, v2) => e.Source.Label.Equals(v1.Label) && e.Destination.Label.Equals(v2.Label);
+        private readonly Func<Edge<Telabel, Tvertex, Tvlabel>, Vertex<Tvertex, Tvlabel>, Vertex<Tvertex, Tvlabel>, bool> _edgeFilter = (e, v1, v2) => e.Source.Identifier.Equals(v1.Identifier) && e.Destination.Identifier.Equals(v2.Identifier);
         public Digraph() {}
 
         public bool IsEmpty
@@ -28,7 +28,7 @@ namespace Assignment1
 
         public Digraph<Tvertex, Tvlabel, Telabel> RemoveVertex(Vertex<Tvertex, Tvlabel> vertex)
         {
-             var vertexToRemove = this.GetVertex(vertex.Label);
+             var vertexToRemove = this.GetVertex(vertex.Identifier);
             if (vertexToRemove != null) _vertices.Remove(vertexToRemove);
             
             return this;
@@ -37,20 +37,20 @@ namespace Assignment1
 
         public Digraph<Tvertex, Tvlabel, Telabel> UpdateVertex(Vertex<Tvertex, Tvlabel> vertex, Tvlabel label)
         {
-            var vertexToUpdate = this.GetVertex(vertex.Label);
+            var vertexToUpdate = this.GetVertex(vertex.Identifier);
             if (vertexToUpdate != null) vertexToUpdate.Label = label;
             return this;
         }
 
         public Tvlabel GetVertex(Vertex<Tvertex, Tvlabel> vertex)
         {
-            var vertexToGet = this.GetVertex(vertex.Label);
+            var vertexToGet = this.GetVertex(vertex.Identifier);
             return vertexToGet == null ? default(Tvlabel) : vertexToGet.Label;
         }
 
         public bool HasVertex(Vertex<Tvertex,Tvlabel> vertex)
         {
-            return this.GetVertex(vertex.Label) != null;
+            return this.GetVertex(vertex.Identifier) != null;
         }
 
         public IEnumerable<Vertex<Tvertex,Tvlabel>> AllVertices()
@@ -60,10 +60,10 @@ namespace Assignment1
 
         public Digraph<Tvertex, Tvlabel, Telabel> AddEdge(Vertex<Tvertex,Tvlabel> vertex1, Vertex<Tvertex,Tvlabel> vertex2, Telabel label)
         {
-            var source = this.GetVertex(vertex1.Label);
+            var source = this.GetVertex(vertex1.Identifier);
             if (source == null) return this;    // todo: figure out what to return
 
-            var destination = this.GetVertex(vertex2.Label);
+            var destination = this.GetVertex(vertex2.Identifier);
             if (destination == null) return this;
 
             var edge = new Edge<Telabel,Tvertex,Tvlabel> { Source = source, Destination = destination, Label = label };
@@ -103,14 +103,14 @@ namespace Assignment1
         public IEnumerable<Vertex<Tvertex,Tvlabel>> FromEdges(Vertex<Tvertex,Tvlabel> vertex)
         {
             return _edges
-                .Where(e => e.Source.Label.Equals(vertex.Label))
+                .Where(e => e.Source.Identifier.Equals(vertex.Identifier))
                 .Select(e => e.Destination)
                 .ToList();
         }
 
-        private Vertex<Tvertex,Tvlabel> GetVertex(Tvlabel label)
+        private Vertex<Tvertex,Tvlabel> GetVertex(Tvertex id)
         {
-            var vertexToGet = _vertices.SingleOrDefault(v => v.Label.Equals(label));
+            var vertexToGet = _vertices.SingleOrDefault(v => v.Identifier.Equals(id));
 
             return vertexToGet;
         }     
