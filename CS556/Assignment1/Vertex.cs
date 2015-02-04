@@ -1,7 +1,8 @@
 ﻿namespace Assignment1
 {
-    public class Vertex<T>
+    public class Vertex<T1, T2>
     {
-        public T Label { get; set; }
+        public T1 Identifier { get; set; }
+        public T2 Label { get; set; }
     }
 }
