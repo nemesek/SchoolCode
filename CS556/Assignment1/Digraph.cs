@@ -11,6 +11,10 @@ namespace Assignment1
         private readonly Func<Edge<Telabel, Tvertex, Tvlabel>, Vertex<Tvertex, Tvlabel>, Vertex<Tvertex, Tvlabel>, bool> 
             _edgeFilter = (e, v1, v2) => e.Source.Identifier.Equals(v1.Identifier) && e.Destination.Identifier.Equals(v2.Identifier);
 
+        private readonly Func<Tvertex, string> missingVertexExceptionMessageFunc = id => string.Format("Vertex Id {0} is not an element within this graph's vertex set", id);
+        private readonly Func<Tvertex, Tvertex, string> missingEdgeExceptionMessageFunc = (v1, v2) => string.Format("Edge from vertex {0} to {1} is not an element within this graph's edge set", v1, v2);
+        private readonly Func<IReadOnlyCollection<Vertex<Tvertex, Tvlabel>>,Tvertex, Vertex<Tvertex, Tvlabel>> getVertexByIdFunc = (set,id) => set.SingleOrDefault(v => v.Identifier.Equals(id));
+
         public Digraph() : this(new List<Vertex<Tvertex, Tvlabel>>(), new List<Edge<Telabel, Tvertex, Tvlabel>>()) { }
 
 
@@ -36,8 +40,8 @@ namespace Assignment1
 
         public Digraph<Tvertex, Tvlabel, Telabel> RemoveVertex(Vertex<Tvertex, Tvlabel> vertex)
         {
-            var vertexToRemove = this.GetVertex(vertex.Identifier);
-            if (vertexToRemove == null) throw new ArgumentException(FormatMissingVertexExceptionMessage(vertex.Identifier));
+            var vertexToRemove = getVertexByIdFunc(_vertices,vertex.Identifier);
+            if (vertexToRemove == null) throw new ArgumentException(missingVertexExceptionMessageFunc(vertex.Identifier));
 
             var updatedVerticesList = _vertices.ToList();
             updatedVerticesList.Remove(vertexToRemove);
@@ -48,8 +52,8 @@ namespace Assignment1
 
         public Digraph<Tvertex, Tvlabel, Telabel> UpdateVertex(Vertex<Tvertex, Tvlabel> vertex, Tvlabel label)
         {
-            var vertexToUpdate = this.GetVertex(vertex.Identifier);
-            if (vertexToUpdate == null) throw new ArgumentException(FormatMissingVertexExceptionMessage(vertex.Identifier));
+            var vertexToUpdate = getVertexByIdFunc(_vertices, vertex.Identifier);
+            if (vertexToUpdate == null) throw new ArgumentException(missingVertexExceptionMessageFunc(vertex.Identifier));
 
             var updatedVertex = new Vertex<Tvertex, Tvlabel>(vertexToUpdate.Identifier, label);
             var updatedVerticesList = _vertices.ToList();
@@ -61,15 +65,15 @@ namespace Assignment1
 
         public Tvlabel GetVertex(Vertex<Tvertex, Tvlabel> vertex)
         {
-            var vertexToGet = this.GetVertex(vertex.Identifier);
-            if (vertexToGet == null) throw new ArgumentException(FormatMissingVertexExceptionMessage(vertex.Identifier));
+            var vertexToGet = getVertexByIdFunc(_vertices, vertex.Identifier);
+            if (vertexToGet == null) throw new ArgumentException(missingVertexExceptionMessageFunc(vertex.Identifier));
 
             return vertexToGet.Label;
         }
 
         public bool HasVertex(Vertex<Tvertex, Tvlabel> vertex)
         {
-            return this.GetVertex(vertex.Identifier) != null;
+            return getVertexByIdFunc(_vertices, vertex.Identifier) != null;
         }
 
         public IEnumerable<Vertex<Tvertex, Tvlabel>> AllVertices()
@@ -79,11 +83,11 @@ namespace Assignment1
 
         public Digraph<Tvertex, Tvlabel, Telabel> AddEdge(Vertex<Tvertex, Tvlabel> vertex1, Vertex<Tvertex, Tvlabel> vertex2, Telabel label)
         {
-            var source = this.GetVertex(vertex1.Identifier);
-            if (source == null)  throw new ArgumentException(FormatMissingVertexExceptionMessage(vertex1.Identifier));
+            var source = getVertexByIdFunc(_vertices,vertex1.Identifier);
+            if (source == null) throw new ArgumentException(missingVertexExceptionMessageFunc(vertex1.Identifier));
 
-            var destination = this.GetVertex(vertex2.Identifier);
-            if (destination == null) throw new ArgumentException(FormatMissingVertexExceptionMessage(vertex2.Identifier));
+            var destination = getVertexByIdFunc(_vertices,vertex2.Identifier);
+            if (destination == null) throw new ArgumentException(missingVertexExceptionMessageFunc(vertex2.Identifier));
             
             var edge = new Edge<Telabel, Tvertex, Tvlabel>(label, vertex1, vertex2);
             var updatedEdgeList = _edges.ToList();
@@ -97,7 +101,7 @@ namespace Assignment1
         {
             var edgeToRemove = _edges.SingleOrDefault(e => _edgeFilter(e, vertex1, vertex2));
 
-            if (edgeToRemove == null) throw new ArgumentException(FormatMissingEdgeExceptionMessage(vertex1.Identifier, vertex2.Identifier));
+            if (edgeToRemove == null) throw new ArgumentException(missingEdgeExceptionMessageFunc(vertex1.Identifier, vertex2.Identifier));
 
             var updatedEdgeList = _edges.ToList();
             updatedEdgeList.Remove(edgeToRemove);
@@ -109,7 +113,7 @@ namespace Assignment1
         {
             var edgeToUpdate = _edges.SingleOrDefault(e => _edgeFilter(e, vertex1, vertex2));
 
-            if (edgeToUpdate == null) throw new ArgumentException(FormatMissingEdgeExceptionMessage(vertex1.Identifier, vertex2.Identifier));
+            if (edgeToUpdate == null) throw new ArgumentException(missingEdgeExceptionMessageFunc(vertex1.Identifier, vertex2.Identifier));
 
             var updatedEdge = new Edge<Telabel, Tvertex, Tvlabel>(label, vertex1, vertex2);
             var updatedEdgeList = _edges.ToList();
@@ -122,7 +126,7 @@ namespace Assignment1
         public Telabel GetEdge(Vertex<Tvertex, Tvlabel> vertex1, Vertex<Tvertex, Tvlabel> vertex2)
         {
             var edge = _edges.SingleOrDefault(e => _edgeFilter(e, vertex1, vertex2));
-            if (edge == null) throw new ArgumentException(FormatMissingEdgeExceptionMessage(vertex1.Identifier, vertex2.Identifier));
+            if (edge == null) throw new ArgumentException(missingEdgeExceptionMessageFunc(vertex1.Identifier, vertex2.Identifier));
 
             return edge.Label;
         }
@@ -140,20 +144,5 @@ namespace Assignment1
                 .ToList();
         }
 
-        private Vertex<Tvertex, Tvlabel> GetVertex(Tvertex id)
-        {
-            var vertexToGet = _vertices.SingleOrDefault(v => v.Identifier.Equals(id));
-            return vertexToGet;
-        }
- 
-        private string FormatMissingVertexExceptionMessage(Tvertex vertexIdentifier)
-        {
-            return string.Format("Vertex Id {0} is not an element within this graph's vertex set", vertexIdentifier);
-        }
-
-        private string FormatMissingEdgeExceptionMessage(Tvertex v1Id, Tvertex v2Id)
-        {
-            return string.Format("Edge from vertex {0} to {1} is not an element within this graph's edge set", v1Id, v2Id);
-        }
     }
 }

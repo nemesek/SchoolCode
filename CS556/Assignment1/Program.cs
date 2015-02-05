@@ -65,6 +65,7 @@ namespace Assignment1
             if (graphPrime == graph) return false;
             if (graphPrime.IsEmpty) return false;
             if (!graph.IsEmpty) return false;
+            if (!graphPrime.HasVertex(vertex)) return false;
             if (!graphPrime.GetVertex(vertex).Equals(expectedLabel)) return false;
             
             return true;
@@ -85,6 +86,8 @@ namespace Assignment1
             if (graphDoublePrime == graphPrime) return false;
             if (!graphPrime.GetVertex(vertex).Equals("Hey")) return false;
             if (!graphDoublePrime.IsEmpty) return false;
+            if (!graphPrime.HasVertex(vertex)) return false;
+            if (graphDoublePrime.HasVertex(vertex)) return false;
 
             var result = false;
             try
@@ -96,6 +99,8 @@ namespace Assignment1
             {
                 result = ae.Message == expectedMessage;
             }
+
+            
 
             return result;
 
