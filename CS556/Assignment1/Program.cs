@@ -16,7 +16,7 @@ namespace Assignment1
 
         static bool New_Graph_CreatesAndReturnsANewInstanceOfTheGraphADT()
         {
-            // Arrange
+            // Arrange Preconditions
 
             // Act
             var graph = new Digraph<int, int, int>();
@@ -27,19 +27,19 @@ namespace Assignment1
 
         static bool Is_Empty_ReturnsTrueWhenGraphHasNoVertices()
         {
-            // Arrange
+            // Arrange Preconditions
             var graph = new Digraph<int, int, int>();
 
             // Act
             var result = graph.IsEmpty;
 
-            // Assert
+            // Assert Postconditions
             return result;
         }
 
         static bool Is_Empty_ReturnsFalseWhenGraphHasAtLeastOneVertex()
         {
-            // Arrange
+            // Arrange Preconditions
             var graph = new Digraph<int, string, int>();
             var vertex = new Vertex<int, string>(1);
             var graphPrime = graph.AddVertex(vertex, "Hey");
@@ -47,21 +47,22 @@ namespace Assignment1
             // Act
             var result = graphPrime.IsEmpty;
 
-            // Assert
+            // Assert Postconditions
             return !result;
         }
 
         static bool Add_Vertex_InsertsVertexWithLabelAndReturnsGPrime()
         {
-            // Arrange
             var expectedLabel = "Hey";
+
+            // Arrange Preconditions
             var graph = new Digraph<int, string, int>();
             var vertex = new Vertex<int, string>(1);
 
             // Act
             var graphPrime = graph.AddVertex(vertex, expectedLabel);
 
-            // Assert
+            // Assert Postconditions
             if (graphPrime == graph) return false;
             if (graphPrime.IsEmpty) return false;
             if (!graph.IsEmpty) return false;
@@ -73,16 +74,18 @@ namespace Assignment1
 
         static bool Remove_Vertex_DeletesVertexAndReturnsGPrime()
         {
-            // Arrange
+            var expectedMessage = "Vertex Id 1 is not an element within V";
+
+            // Arrange Preconditions
             var graph = new Digraph<int, string, int>();
             var vertex = new Vertex<int, string>(1);
             var graphPrime = graph.AddVertex(vertex, "Hey");
-            var expectedMessage = "Vertex Id 1 is not an element within V";
+            
 
             // Act
             var graphDoublePrime = graphPrime.RemoveVertex(vertex);
 
-            // Assert
+            // Assert Postconditions
             if (graphDoublePrime == graphPrime) return false;
             if (!graphPrime.GetVertex(vertex).Equals("Hey")) return false;
             if (!graphDoublePrime.IsEmpty) return false;
@@ -98,12 +101,9 @@ namespace Assignment1
             catch(ArgumentException ae)
             {
                 result = ae.Message == expectedMessage;
-            }
-
-            
+            }           
 
             return result;
-
         }
     }
 }

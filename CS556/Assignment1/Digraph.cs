@@ -6,7 +6,7 @@ namespace Assignment1
 {
     public class Digraph<V,L,E>
     {
-        private readonly IReadOnlyCollection<Vertex<V,L>> _vertices;
+        private readonly IReadOnlyCollection<Vertex<V, L>> _vertices;
         private readonly IReadOnlyCollection<Edge<E,V,L>> _edges;
         private readonly Func<Edge<E,V,L>, Vertex<V,L>, Vertex<V,L>, bool> _edgeFilter = (e, v1, v2) => e.Source.Identifier.Equals(v1.Identifier) && e.Destination.Identifier.Equals(v2.Identifier);
         private readonly Func<V,string> missingVertexExceptionMessageFunc = id => string.Format("Vertex Id {0} is not an element within V", id);
@@ -14,7 +14,6 @@ namespace Assignment1
         private readonly Func<IReadOnlyCollection<Vertex<V,L>>,V,Vertex<V,L>> getVertexByIdFunc = (set,id) => set.SingleOrDefault(v => v.Identifier.Equals(id));
 
         public Digraph() : this(new List<Vertex<V,L>>(), new List<Edge<E,V,L>>()) { }
-
 
         // This is to return G' made the ctor private to avoid implementation details leaking out
         private Digraph(IEnumerable<Vertex<V,L>> vertices, IEnumerable<Edge<E,V,L>> edges)
