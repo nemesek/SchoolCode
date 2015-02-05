@@ -9,8 +9,8 @@ namespace Assignment1
         private readonly IReadOnlyCollection<Vertex<Tvertex, Tvlabel>> _vertices;
         private readonly IReadOnlyCollection<Edge<Telabel, Tvertex, Tvlabel>> _edges;
         private readonly Func<Edge<Telabel, Tvertex, Tvlabel>, Vertex<Tvertex, Tvlabel>, Vertex<Tvertex, Tvlabel>, bool> _edgeFilter = (e, v1, v2) => e.Source.Identifier.Equals(v1.Identifier) && e.Destination.Identifier.Equals(v2.Identifier);
-        private readonly Func<Tvertex, string> missingVertexExceptionMessageFunc = id => string.Format("Vertex Id {0} is not an element within this graph's vertex set", id);
-        private readonly Func<Tvertex, Tvertex, string> missingEdgeExceptionMessageFunc = (v1, v2) => string.Format("Edge from vertex {0} to {1} is not an element within this graph's edge set", v1, v2);
+        private readonly Func<Tvertex, string> missingVertexExceptionMessageFunc = id => string.Format("Vertex Id {0} is not an element within V", id);
+        private readonly Func<Tvertex, Tvertex, string> missingEdgeExceptionMessageFunc = (v1, v2) => string.Format("Edge from vertex {0} to {1} is not an element within E", v1, v2);
         private readonly Func<IReadOnlyCollection<Vertex<Tvertex, Tvlabel>>,Tvertex, Vertex<Tvertex, Tvlabel>> getVertexByIdFunc = (set,id) => set.SingleOrDefault(v => v.Identifier.Equals(id));
 
         public Digraph() : this(new List<Vertex<Tvertex, Tvlabel>>(), new List<Edge<Telabel, Tvertex, Tvlabel>>()) { }

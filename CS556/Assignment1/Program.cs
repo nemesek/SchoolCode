@@ -77,7 +77,7 @@ namespace Assignment1
             var graph = new Digraph<int, string, int>();
             var vertex = new Vertex<int, string>(1);
             var graphPrime = graph.AddVertex(vertex, "Hey");
-            var expectedMessage = "Vertex Id 1 is not an element within this graph's vertex set";
+            var expectedMessage = "Vertex Id 1 is not an element within V";
 
             // Act
             var graphDoublePrime = graphPrime.RemoveVertex(vertex);
