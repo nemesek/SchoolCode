@@ -19,6 +19,5 @@ namespace Assignment1
         public E Label { get { return _label; } }
         public Vertex<V,L> DirectPredecessor { get { return _arc.Item1; } }
         public Vertex<V,L> DirectSuccessor { get { return _arc.Item2; } }
-        
     }
 }
