@@ -81,7 +81,7 @@ namespace Assignment1
             // Arrange Preconditions
             var graph = new Digraph<int, string, int>();
             var vertex = new Vertex<int, string>(1);
-            var graphPrime = graph.AddVertex(vertex, "Hey");
+            var graphPrime = graph.AddVertex(vertex, "Foo");
 
             // Act
             var result = graphPrime.IsEmpty;
@@ -92,7 +92,7 @@ namespace Assignment1
 
         static string Add_Vertex_InsertsVertexWithLabelAndReturnsGPrime()
         {
-            var expectedLabel = "Hey";
+            var expectedLabel = "Foo";
 
             // Arrange Preconditions
             var graph = new Digraph<int, string, int>();
@@ -139,7 +139,7 @@ namespace Assignment1
             // Arrange Preconditions
             var graph = new Digraph<int, string, int>();
             var vertex = new Vertex<int, string>(1);
-            var graphPrime = graph.AddVertex(vertex, "Hey");
+            var graphPrime = graph.AddVertex(vertex, "Foo");
             
 
             // Act
@@ -147,7 +147,7 @@ namespace Assignment1
 
             // Assert Postconditions
             if (graphDoublePrime == graphPrime) return Fail;
-            if (!graphPrime.GetVertex(vertex).Equals("Hey")) return Fail;
+            if (!graphPrime.GetVertex(vertex).Equals("Foo")) return Fail;
             if (!graphDoublePrime.IsEmpty) return Fail;
             if (!graphPrime.HasVertex(vertex)) return Fail;
             return !graphDoublePrime.HasVertex(vertex) ? Pass:Fail;
