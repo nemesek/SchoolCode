@@ -18,6 +18,7 @@ namespace Assignment1
             Console.WriteLine(Has_Vertex_ReturnsFalseWhenVertexVIsNotInGraphG()); // True
             Console.WriteLine(Add_Edge_InsertsEdgeFromV1ToV2AndReturnsGPrime());    // True
             Console.WriteLine(Remove_Edge_DeletesEdgeFromGraphGAndReturnsGPrime());   // True
+            Console.WriteLine(Update_Edge_ChangesEdgeLabelAndReturnsGPrime());  // True
         }
 
         static bool New_Graph_CreatesAndReturnsANewInstanceOfTheGraphADT()
@@ -220,6 +221,29 @@ namespace Assignment1
             if (graphQuadruplePrime.HasEdge(vertex1,vertex2)) return false;
 
             return true;
-        }       
+        }
+       
+        static bool Update_Edge_ChangesEdgeLabelAndReturnsGPrime()
+        {
+            // Arrange preconditons
+            var graph = new Digraph<int, int, int>();
+            var vertex1 = new Vertex<int, int>(1);
+            var vertex2 = new Vertex<int, int>(2);
+            var graphPrime = graph.AddVertex(vertex1, vertex1.Identifier);
+            var graphDoublePrime = graphPrime.AddVertex(vertex2, vertex2.Identifier);
+            var edgeLabel = 1;
+            var graphTriplePrime = graphDoublePrime.AddEdge(vertex1, vertex2, edgeLabel);
+
+            // Act
+            var updatedEdgeLabel = 2;
+            var graphQuadruplePrime = graphTriplePrime.UpdateEdge(vertex1, vertex2, updatedEdgeLabel);
+
+            // Assert
+            if (graphQuadruplePrime == graphTriplePrime) return false;
+            if (graphQuadruplePrime.GetEdge(vertex1, vertex2) == edgeLabel) return false;
+            if (graphQuadruplePrime.GetEdge(vertex1, vertex2) != updatedEdgeLabel) return false;
+
+            return true;
+        }
     }
 }
