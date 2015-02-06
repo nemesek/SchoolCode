@@ -2,20 +2,23 @@
 
 namespace Assignment1
 {
-    public class Edge<T1, T2,T3 >
+    // E = Edge Label
+    // V = Vertex Identifier
+    // L = Vertex Label
+    public class Edge<E,V,L>
     {
-        private readonly T1 _label;
-        private readonly Tuple<Vertex<T2, T3>, Vertex<T2, T3>> _arc;
+        private readonly E _label;
+        private readonly Tuple<Vertex<V,L>, Vertex<V,L>> _arc;
 
-        public Edge(T1 label, Vertex<T2, T3> source, Vertex<T2, T3> destination)
+        public Edge(E label, Vertex<V,L> source, Vertex<V,L> destination)
         {
             _label = label;
-            _arc = new Tuple<Vertex<T2, T3>, Vertex<T2, T3>>(source, destination);
+            _arc = new Tuple<Vertex<V,L>, Vertex<V,L>>(source, destination);
         }
 
-        public T1 Label { get { return _label; } }
-        public Vertex<T2, T3> DirectPredecessor { get { return _arc.Item1; } }
-        public Vertex<T2, T3> DirectSuccessor { get { return _arc.Item2; } }
+        public E Label { get { return _label; } }
+        public Vertex<V,L> DirectPredecessor { get { return _arc.Item1; } }
+        public Vertex<V,L> DirectSuccessor { get { return _arc.Item2; } }
         
     }
 }

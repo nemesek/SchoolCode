@@ -1,23 +1,25 @@
 ﻿namespace Assignment1
 {
-    public class Vertex<T1, T2>
+    // V = Vertex Identifier
+    // L = Vertex Label
+    public class Vertex<V,L>
     {
-        private readonly T1 _identifier;
-        private readonly T2 _label;
+        private readonly V _identifier;
+        private readonly L _label;
 
-        public Vertex(T1 identifier)
+        public Vertex(V identifier)
         {
             _identifier = identifier;
-            _label = default(T2);
+            _label = default(L);
         }
 
-        public Vertex(T1 identifier, T2 label)
+        public Vertex(V identifier, L label)
         {
             _identifier = identifier;
             _label = label;
         }
 
-        public T1 Identifier { get { return _identifier; } }
-        public T2 Label { get { return _label; } }
+        public V Identifier { get { return _identifier; } }
+        public L Label { get { return _label; } }
     }
 }

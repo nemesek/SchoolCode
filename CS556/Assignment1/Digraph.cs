@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Assignment1
 {
+    // V = Vertex Identifier
+    // L = Vertex Label
+    // E = Edge Label
     public class Digraph<V,L,E>
     {
         private readonly IReadOnlyCollection<Vertex<V, L>> _vertices;
