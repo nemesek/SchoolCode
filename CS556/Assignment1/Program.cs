@@ -11,7 +11,6 @@ namespace Assignment1
             Console.WriteLine(Is_Empty_ReturnsFalseWhenGraphHasAtLeastOneVertex()); // True
             Console.WriteLine(Add_Vertex_InsertsVertexWithLabelAndReturnsGPrime()); // True
             Console.WriteLine(Remove_Vertex_DeletesVertexAndReturnsGPrime());   // True
-   
         }
 
         static bool New_Graph_CreatesAndReturnsANewInstanceOfTheGraphADT()

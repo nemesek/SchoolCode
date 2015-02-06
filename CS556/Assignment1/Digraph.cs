@@ -8,7 +8,7 @@ namespace Assignment1
     {
         private readonly IReadOnlyCollection<Vertex<V, L>> _vertices;
         private readonly IReadOnlyCollection<Edge<E,V,L>> _edges;
-        private readonly Func<Edge<E,V,L>, Vertex<V,L>, Vertex<V,L>, bool> _edgeFilter = (e, v1, v2) => e.Source.Identifier.Equals(v1.Identifier) && e.Destination.Identifier.Equals(v2.Identifier);
+        private readonly Func<Edge<E,V,L>, Vertex<V,L>, Vertex<V,L>, bool> _edgeFilter = (e, v1, v2) => e.DirectPredecessor.Identifier.Equals(v1.Identifier) && e.DirectSuccessor.Identifier.Equals(v2.Identifier);
         private readonly Func<V,string> missingVertexExceptionMessageFunc = id => string.Format("Vertex Id {0} is not an element within V", id);
         private readonly Func<V,V,string> missingEdgeExceptionMessageFunc = (v1, v2) => string.Format("Edge from vertex {0} to {1} is not an element within E", v1, v2);
         private readonly Func<IReadOnlyCollection<Vertex<V,L>>,V,Vertex<V,L>> getVertexByIdFunc = (set,id) => set.SingleOrDefault(v => v.Identifier.Equals(id));
@@ -136,8 +136,8 @@ namespace Assignment1
         public IEnumerable<Vertex<V,L>> FromEdges(Vertex<V,L> vertex)
         {
             return _edges
-                .Where(e => e.Source.Identifier.Equals(vertex.Identifier))
-                .Select(e => e.Destination)
+                .Where(e => e.DirectPredecessor.Identifier.Equals(vertex.Identifier))
+                .Select(e => e.DirectSuccessor)
                 .ToList();
         }
 
