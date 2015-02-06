@@ -173,7 +173,7 @@ namespace Assignment1
                 result = ae.Message == expectedMessage;
             }
 
-            return Pass;
+            return result ? Pass : Fail;
         }
 
         static string Update_Vertex_ChangesLabelOnVertexAndReturnsGPrime()
