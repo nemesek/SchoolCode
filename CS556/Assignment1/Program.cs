@@ -19,6 +19,13 @@ namespace Assignment1
             Console.WriteLine(Add_Edge_InsertsEdgeFromV1ToV2AndReturnsGPrime());    // True
             Console.WriteLine(Remove_Edge_DeletesEdgeFromGraphGAndReturnsGPrime());   // True
             Console.WriteLine(Update_Edge_ChangesEdgeLabelAndReturnsGPrime());  // True
+            Console.WriteLine(Get_Edge_ReturnsTheEdgeLabel());  // True
+            Console.WriteLine(Has_Edge_ReturnsTrueWhenEdgeFromV1ToV2InGraphG());    // True
+            Console.WriteLine(Has_Edge_ReturnsFalseWhenEdgeFromV1ToV2NotInGraphG());    // True
+            Console.WriteLine(All_Vertices_ReturnsEmptyWhenGraphHasNoVertices());   // True
+            Console.WriteLine(All_Vertices_ReturnsEnumerableOfAllVertices());   // True
+            Console.WriteLine(From_Edges_ReturnsEmptyWhenVertexHasNoDirectSuccessors());    // True
+            Console.WriteLine(From_Edges_ReturnsEnumerableOfAllSuccessorsForVertexV()); // True
         }
 
         static bool New_Graph_CreatesAndReturnsANewInstanceOfTheGraphADT()
@@ -74,9 +81,7 @@ namespace Assignment1
             if (graphPrime.IsEmpty) return false;
             if (!graph.IsEmpty) return false;
             if (!graphPrime.HasVertex(vertex)) return false;
-            if (!graphPrime.GetVertex(vertex).Equals(expectedLabel)) return false;
-            
-            return true;
+            return graphPrime.GetVertex(vertex).Equals(expectedLabel);
         }
 
         static bool Remove_Vertex_DeletesVertexAndReturnsGPrime()
@@ -128,9 +133,7 @@ namespace Assignment1
             // Assert postconditions
             if(graphDoublePrime == graphPrime) return false;
             if(graphDoublePrime.GetVertex(vertex) == object1) return false;
-            if(graphDoublePrime.GetVertex(vertex) != object2) return false;
-
-            return true;
+            return graphDoublePrime.GetVertex(vertex) == object2;
         }
 
         static bool Get_Vertex_ReturnsTheLabelFromVertexVInGraphG()
@@ -146,8 +149,7 @@ namespace Assignment1
 
             // Assert postconditions
             if (result != label) return false;
-            if (graphPrime == graph) return false;
-            return true;
+            return graphPrime != graph;
         }
 
         static bool Has_Vertex_ReturnsTrueWhenVertexVIsInGraphG()
@@ -195,11 +197,9 @@ namespace Assignment1
 
             // Assert postconditions
             if (graphTriplePrime == graphDoublePrime) return false;
-            if (graphTriplePrime.FromEdges(vertex1).Count() == 0) return false;
-            if (graphTriplePrime.FromEdges(vertex2).Count() > 0) return false;
-            if (graphTriplePrime.GetEdge(vertex1, vertex2) != edgeLabel) return false;
-
-            return true;
+            if (!graphTriplePrime.FromEdges(vertex1).Any()) return false;
+            if (graphTriplePrime.FromEdges(vertex2).Any()) return false;
+            return graphTriplePrime.GetEdge(vertex1, vertex2) == edgeLabel;
         }
 
         static bool Remove_Edge_DeletesEdgeFromGraphGAndReturnsGPrime()
@@ -218,9 +218,7 @@ namespace Assignment1
 
             // Assert postconditions
             if (graphQuadruplePrime == graphTriplePrime) return false;
-            if (graphQuadruplePrime.HasEdge(vertex1,vertex2)) return false;
-
-            return true;
+            return !graphQuadruplePrime.HasEdge(vertex1,vertex2);
         }
        
         static bool Update_Edge_ChangesEdgeLabelAndReturnsGPrime()
@@ -241,9 +239,122 @@ namespace Assignment1
             // Assert
             if (graphQuadruplePrime == graphTriplePrime) return false;
             if (graphQuadruplePrime.GetEdge(vertex1, vertex2) == edgeLabel) return false;
-            if (graphQuadruplePrime.GetEdge(vertex1, vertex2) != updatedEdgeLabel) return false;
+            return graphQuadruplePrime.GetEdge(vertex1, vertex2) == updatedEdgeLabel;
+        }
 
-            return true;
+        static bool Get_Edge_ReturnsTheEdgeLabel()
+        {
+            // Arrange preconditions
+            var graph = new Digraph<int, int, int>();
+            var vertex1 = new Vertex<int, int>(1);
+            var vertex2 = new Vertex<int, int>(2);
+            var graphPrime = graph.AddVertex(vertex1, vertex1.Identifier);
+            var graphDoublePrime = graphPrime.AddVertex(vertex2, vertex2.Identifier);
+            var edgeLabel = 1;
+            var graphTriplePrime = graphDoublePrime.AddEdge(vertex1, vertex2, edgeLabel);
+
+            // Act
+            var label = graphTriplePrime.GetEdge(vertex1, vertex2);
+
+            // Assert postconditons
+            return label == edgeLabel;
+        }
+
+        static bool Has_Edge_ReturnsTrueWhenEdgeFromV1ToV2InGraphG()
+        {
+            // Arrange preconditions
+            var graph = new Digraph<int, int, int>();
+            var vertex1 = new Vertex<int, int>(1);
+            var vertex2 = new Vertex<int, int>(2);
+            var graphPrime = graph.AddVertex(vertex1, vertex1.Identifier);
+            var graphDoublePrime = graphPrime.AddVertex(vertex2, vertex2.Identifier);
+            var edgeLabel = 1;
+            var graphTriplePrime = graphDoublePrime.AddEdge(vertex1, vertex2, edgeLabel);
+
+            // Act
+            var result = graphTriplePrime.HasEdge(vertex1, vertex2);
+
+            // Assert postconditions
+            return !graphDoublePrime.HasEdge(vertex1, vertex2) && result;
+        }
+
+        static bool Has_Edge_ReturnsFalseWhenEdgeFromV1ToV2NotInGraphG()
+        {
+            // Arrange preconditions
+            var graph = new Digraph<int, int, int>();
+            var vertex1 = new Vertex<int, int>(1);
+            var vertex2 = new Vertex<int, int>(2);
+            
+            // Act
+            var result = graph.HasEdge(vertex1, vertex2);
+
+            // Assert postconditions
+            return !result;
+        }
+
+        static bool All_Vertices_ReturnsEmptyWhenGraphHasNoVertices()
+        {
+            // Arrange preconditons
+            var graph = new Digraph<int, int, int>();
+            
+            // Act
+            var result = graph.AllVertices();
+
+            // Assert
+            return !result.Any();
+        }
+
+        static bool All_Vertices_ReturnsEnumerableOfAllVertices()
+        {
+            // Arrange preconditions
+            var graph = new Digraph<int, int, int>();
+            var vertex1 = new Vertex<int, int>(1);
+            var vertex2 = new Vertex<int, int>(2);
+            var graphPrime = graph.AddVertex(vertex1, vertex1.Identifier);
+            var graphDoublePrime = graphPrime.AddVertex(vertex2, vertex2.Identifier);
+
+            // Act
+            var vertices = graphDoublePrime.AllVertices();
+            
+            // Assert postconditons
+            if (vertices.Count() != 2) return false;
+            return vertices.Any(v => v.Identifier == vertex1.Identifier) && vertices.Any(v => v.Identifier == vertex2.Identifier);
+        }
+
+        static bool From_Edges_ReturnsEmptyWhenVertexHasNoDirectSuccessors()
+        {
+            // Arrange preconditions
+            var graph = new Digraph<int, int, int>();
+            var vertex1 = new Vertex<int, int>(1);
+            var graphPrime = graph.AddVertex(vertex1, vertex1.Identifier);
+
+            // Act
+            var successors = graphPrime.FromEdges(vertex1);
+
+            // Assert postconditions
+            return !successors.Any();
+        }
+
+        static bool From_Edges_ReturnsEnumerableOfAllSuccessorsForVertexV()
+        {
+            // Arrange preconditions
+            var graph = new Digraph<int, int, int>();
+            var vertex1 = new Vertex<int, int>(1);
+            var vertex2 = new Vertex<int, int>(2);
+            var graphPrime = graph.AddVertex(vertex1, vertex1.Identifier);
+            var graphDoublePrime = graphPrime.AddVertex(vertex2, vertex2.Identifier);
+            var edgeLabel = 1;
+            var graphTriplePrime = graphDoublePrime.AddEdge(vertex1, vertex2, edgeLabel);
+            var vertex3 = new Vertex<int, int>(3);
+            var graphQuadruplePrime = graphTriplePrime.AddVertex(vertex3, vertex3.Identifier);
+            var graphQuintuplePrime = graphQuadruplePrime.AddEdge(vertex1, vertex3, edgeLabel + 1);
+
+            // Act
+            var successors = graphQuintuplePrime.FromEdges(vertex1);
+
+            // Assert postconditions
+            if (successors.Count() != 2) return false;
+            return successors.Any(v => v.Identifier == vertex2.Identifier) && successors.Any(v => v.Identifier == vertex3.Identifier);
         }
     }
 }
