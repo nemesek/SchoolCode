@@ -79,8 +79,8 @@ namespace Assignment1
         static string Is_Empty_ReturnsFalseWhenGraphHasAtLeastOneVertex()
         {
             // Arrange Preconditions
-            var graph = new Digraph<Byte, string, int>();
-            var vertex = new Vertex<Byte, string>(1);
+            var graph = new Digraph<byte, string, int>();
+            var vertex = new Vertex<byte, string>(1);
             var graphPrime = graph.AddVertex(vertex, "Foo");
 
             // Act
@@ -411,9 +411,9 @@ namespace Assignment1
         static string Update_Edge_ChangesEdgeLabelAndReturnsGPrime()
         {
             // Arrange preconditons
-            var graph = new Digraph<int, int, int>();
-            var vertex1 = new Vertex<int, int>(1);
-            var vertex2 = new Vertex<int, int>(2);
+            var graph = new Digraph<char, int, int>();
+            var vertex1 = new Vertex<char, int>('a');
+            var vertex2 = new Vertex<char, int>('b');
             var graphPrime = graph.AddVertex(vertex1, vertex1.Identifier);
             var graphDoublePrime = graphPrime.AddVertex(vertex2, vertex2.Identifier);
             var edgeLabel = 1;
