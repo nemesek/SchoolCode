@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Assignment1
 {
@@ -29,13 +30,18 @@ namespace Assignment1
         // This is to return G' made the ctor private to avoid implementation details leaking out
         private Digraph(IEnumerable<Vertex<V,L>> vertices, IEnumerable<Edge<E,V,L>> edges)
         {
+            // ensure invariant with guard clauses, these should never be null since the ctor is private
+            if (vertices == null) throw new ArgumentNullException("vertices");
+            if (edges == null) throw new ArgumentNullException("edges");
+
             _vertices = vertices.ToList().AsReadOnly();
             _edges = edges.ToList().AsReadOnly();
         }
 
+        // returns true if V = {} otherwise false
         public bool IsEmpty{ get { return _vertices.Count == 0; } }
 
-        // adds vertex v to V'
+        // creates V' = V + v
         // constructs G'=(V',E) and returns G'
         // throws exception if vertex v already exists in V
         public Digraph<V,L,E> AddVertex(Vertex<V,L> vertex, L label)
@@ -49,6 +55,9 @@ namespace Assignment1
             return new Digraph<V,L,E>(updatedVerticesList, _edges);
         }
 
+        // creates V' = V - v
+        // constructs G'=(V',E) and returns G'
+        // throws exception if v not in V
         public Digraph<V,L,E> RemoveVertex(Vertex<V,L> vertex)
         {
             var vertexToRemove = _vertexFilter(_vertices,vertex.Identifier);
@@ -60,7 +69,9 @@ namespace Assignment1
             return new Digraph<V,L,E>(updatedVerticesList, _edges);
         }
 
-
+        // creates V' = (V - v) + v'
+        // constructs G'=(V',E) and returns G'
+        // throws exception if v not in V
         public Digraph<V,L,E> UpdateVertex(Vertex<V,L> vertex, L label)
         {
             var vertexToUpdate = _vertexFilter(_vertices, vertex.Identifier);
@@ -84,16 +95,21 @@ namespace Assignment1
             return vertexToGet.Label;
         }
 
+        // Returns true if v in V otherwise false
         public bool HasVertex(Vertex<V,L> vertex)
         {
             return _vertexFilter(_vertices, vertex.Identifier) != null;
         }
 
+        // Returns V
         public IEnumerable<Vertex<V,L>> AllVertices()
         {
             return _vertices.ToList();
         }
 
+        // creates E' = E + e
+        // constructs G' = (V, E') and returns G'
+        // throws exception if v1 not in V || v2 not in V
         public Digraph<V,L,E> AddEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2, E label)
         {
             var source = _vertexFilter(_vertices,vertex1.Identifier);
@@ -110,6 +126,9 @@ namespace Assignment1
 
         }
 
+        // creates E' = E - e
+        // constructs G' = (V, E') and returns G'
+        // throws exception if e not in E
         public Digraph<V,L,E> RemoveEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2)
         {
             var edgeToRemove = _edges.SingleOrDefault(e => _edgeFilter(e,vertex1, vertex2));
@@ -122,6 +141,9 @@ namespace Assignment1
             return new Digraph<V,L,E>(_vertices, updatedEdgeList);
         }
 
+        // creates E' = (E - e) + e'
+        // constructs G' = (V, E') and returns G'
+        // throws exception if e not in E
         public Digraph<V,L,E> UpdateEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2, E label)
         {
             var edgeToUpdate = _edges.SingleOrDefault(e => _edgeFilter(e,vertex1, vertex2));
@@ -146,11 +168,13 @@ namespace Assignment1
             return edge.Label;
         }
 
+        // returns true if e in E otherwise false
         public bool HasEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2)
         {
             return _edges.Any(e => _edgeFilter(e,vertex1, vertex2));
         }
 
+        // returns all directSuccessors of v
         public IEnumerable<Vertex<V,L>> FromEdges(Vertex<V,L> vertex)
         {
             return _edges
@@ -158,5 +182,41 @@ namespace Assignment1
                 .Select(e => e.DirectSuccessor)
                 .ToList();
         }
+
+        public override string ToString()
+        {
+            //return base.ToString();
+            var builder = new StringBuilder();
+
+            foreach (var v in _vertices)
+            {
+                _buildPredecessor(v, builder);
+
+                foreach (var p in FromEdges(v))
+                {
+                    _buildSucessor(p, builder);
+                }
+
+            }
+
+            return builder.ToString();
+        }
+
+        private Action<Vertex<V, L>, StringBuilder> _buildPredecessor = (v,b) =>
+            {
+                b.Append("Vertex with Id ");
+                b.Append(v.Identifier.ToString());
+                b.Append(" is Direct Predecessor of: ");
+                b.AppendLine();
+            };
+
+        private Action<Vertex<V, L>, StringBuilder> _buildSucessor = (v, b) =>
+            {
+                b.Append("----Successor Vertex with Id ");
+                b.Append(v.Identifier);
+                b.AppendLine();
+            };
+
+
     }
 }
