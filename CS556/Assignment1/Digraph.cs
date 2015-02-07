@@ -4,10 +4,12 @@ using System.Linq;
 
 namespace Assignment1
 {
-    // V = Vertex Identifier
-    // L = Vertex Label
-    // E = Edge Label
-    public class Digraph<V,L,E>
+    // V = Vertex Identifier, L = Vertex Label,  E = Edge Label
+    // The IConvertible Constraint forces V to be of type Boolean, Byte, Char, DateTime, Decimal, Double
+    // Int (16, 32 and 64-bit), ,SByte, Single (float), String, or UInt (16, 32 and 64-bit)
+    // Without the constraint equality checks against reference types that don't override Equals
+    // would not work since Vertex implementation is immutable
+    public class Digraph<V,L,E> where V : IConvertible
     {
         private readonly IReadOnlyCollection<Vertex<V, L>> _vertices;
         private readonly IReadOnlyCollection<Edge<E,V,L>> _edges;

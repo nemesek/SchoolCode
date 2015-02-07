@@ -79,8 +79,8 @@ namespace Assignment1
         static string Is_Empty_ReturnsFalseWhenGraphHasAtLeastOneVertex()
         {
             // Arrange Preconditions
-            var graph = new Digraph<int, string, int>();
-            var vertex = new Vertex<int, string>(1);
+            var graph = new Digraph<Byte, string, int>();
+            var vertex = new Vertex<Byte, string>(1);
             var graphPrime = graph.AddVertex(vertex, "Foo");
 
             // Act
@@ -95,8 +95,8 @@ namespace Assignment1
             var expectedLabel = "Foo";
 
             // Arrange Preconditions
-            var graph = new Digraph<int, string, int>();
-            var vertex = new Vertex<int, string>(1);
+            var graph = new Digraph<decimal, string, int>();
+            var vertex = new Vertex<decimal, string>(1000m);
 
             // Act
             var graphPrime = graph.AddVertex(vertex, expectedLabel);
@@ -111,11 +111,11 @@ namespace Assignment1
 
         static string Add_Vertex_ThrowsExceptionWhenVertexIdIsNotUnique()
         {
-            var expectedMessage = "Vertex Id 1 must be unique";
+            var expectedMessage = "Vertex Id True must be unique";
 
             // Arrange Preconditions
-            var graph = new Digraph<int, string, int>();
-            var vertex = new Vertex<int, string>(1);
+            var graph = new Digraph<bool, string, int>();
+            var vertex = new Vertex<bool, string>(true);
             var graphPrime = graph.AddVertex(vertex, "Foo");
             
             // Act 
@@ -137,8 +137,9 @@ namespace Assignment1
         static string Remove_Vertex_DeletesVertexAndReturnsGPrime()
         {
             // Arrange Preconditions
-            var graph = new Digraph<int, string, int>();
-            var vertex = new Vertex<int, string>(1);
+            var date = DateTime.Now;
+            var graph = new Digraph<DateTime, string, int>();
+            var vertex = new Vertex<DateTime, string>(date);
             var graphPrime = graph.AddVertex(vertex, "Foo");
             
 
@@ -179,8 +180,8 @@ namespace Assignment1
         static string Update_Vertex_ChangesLabelOnVertexAndReturnsGPrime()
         {
             // Arrange preconditions
-            var graph = new Digraph<int, object, int>();
-            var vertex = new Vertex<int, object>(1);
+            var graph = new Digraph<float, object, int>();
+            var vertex = new Vertex<float, object>(1/3);
             var object1 = new object();
             var graphPrime = graph.AddVertex(vertex,object1);
 
@@ -208,7 +209,7 @@ namespace Assignment1
 
             try
             {
-                graph.UpdateVertex(vertex, "Foo");
+                graph.UpdateVertex(vertex, label);
                 return Fail;
             }
             catch (Exception ex)
@@ -596,5 +597,6 @@ namespace Assignment1
             if (successors.Count() != 2) return Fail;
             return successors.Any(v => v.Identifier == vertex2.Identifier) && successors.Any(v => v.Identifier == vertex3.Identifier) ? Pass : Fail;
         }
+
     }
 }
