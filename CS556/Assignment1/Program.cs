@@ -51,19 +51,25 @@ namespace Assignment1
             Console.WriteLine("===============from_edges tests:===============");
             Console.WriteLine(From_Edges_ReturnsEmptyWhenVertexHasNoDirectSuccessors());    // PASS
             Console.WriteLine(From_Edges_ReturnsEnumerableOfAllSuccessorsForVertexV()); // PASS
+            Console.WriteLine();
+            Console.WriteLine("===============Tests Done:===============");
+            Console.WriteLine();
+            Console.WriteLine("Demonstrating Graph.ToString() Output"); 
+            // Should output count of V and E as well as all vertices and their direct successors
+            // The specific Output from OutputGraphStringRepresentation() :
+            /*
+             * Graph G has 3 vertices in set V
+             * Graph G has 3 edges in set E
+             * Vertex with Id 1 is Direct Predecessor of:
+             * ----Successor Vertex with Id 2
+             * ----Successor Vertex with Id 3
+             * Vertex with Id 2 is Direct Predecessor of:
+             * ----No other vertices
+             * Vertex with Id 3 is Direct Predecessor of: 
+             * ----Successor Vertex with Id 2
+             */
+            OutputGraphStringRepresentation();
 
-            var graph = new Digraph<int, int, int>();
-            var vertex1 = new Vertex<int, int>(1);
-            var vertex2 = new Vertex<int, int>(2);
-            var graphPrime = graph.AddVertex(vertex1, vertex1.Identifier);
-            var graphDoublePrime = graphPrime.AddVertex(vertex2, vertex2.Identifier);
-            var edgeLabel = 1;
-            var graphTriplePrime = graphDoublePrime.AddEdge(vertex1, vertex2, edgeLabel);
-            var vertex3 = new Vertex<int, int>(3);
-            var graphQuadruplePrime = graphTriplePrime.AddVertex(vertex3, vertex3.Identifier);
-            var graphQuintuplePrime = graphQuadruplePrime.AddEdge(vertex1, vertex3, edgeLabel + 1);
-            var x = graphQuintuplePrime.ToString();
-            Console.WriteLine(x);
 
         }
 
@@ -610,6 +616,23 @@ namespace Assignment1
             // Assert postconditions
             if (successors.Count() != 2) return Fail;
             return successors.Any(v => v.Identifier == vertex2.Identifier) && successors.Any(v => v.Identifier == vertex3.Identifier) ? Pass : Fail;
+        }
+
+        static void OutputGraphStringRepresentation()
+        {
+
+            var graph = new Digraph<int, int, int>();
+            var vertex1 = new Vertex<int, int>(1);
+            var vertex2 = new Vertex<int, int>(2); 
+            var graphPrime = graph.AddVertex(vertex1, vertex1.Identifier);
+            var graphDoublePrime = graphPrime.AddVertex(vertex2, vertex2.Identifier);
+            var edgeLabel = 1;
+            var graphTriplePrime = graphDoublePrime.AddEdge(vertex1, vertex2, edgeLabel);
+            var vertex3 = new Vertex<int, int>(3);
+            var graphQuadruplePrime = graphTriplePrime.AddVertex(vertex3, vertex3.Identifier);
+            var graphQuintuplePrime = graphQuadruplePrime.AddEdge(vertex1, vertex3, edgeLabel + 1);
+            var graphSextuplePrime = graphQuintuplePrime.AddEdge(vertex3, vertex2, edgeLabel + 2);
+            Console.WriteLine(graphSextuplePrime.ToString());
         }
     }
 }

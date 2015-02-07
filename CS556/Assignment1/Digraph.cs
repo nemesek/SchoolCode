@@ -17,7 +17,7 @@ namespace Assignment1
         private readonly IReadOnlyCollection<Vertex<V, L>> _vertices;
         private readonly IReadOnlyCollection<Edge<E,V,L>> _edges;
 
-        // vertex, edge predicates
+        // vertex and edge predicates
         private readonly Func<IReadOnlyCollection<Vertex<V, L>>, V, Vertex<V, L>> _vertexFilter = (set, id) => set.SingleOrDefault(v => v.Identifier.Equals(id));
         private readonly Func<Edge<E,V,L>, Vertex<V,L>, Vertex<V,L>, bool> _edgeFilter = (e, v1, v2) => e.DirectPredecessor.Identifier.Equals(v1.Identifier) && e.DirectSuccessor.Identifier.Equals(v2.Identifier);
         
@@ -46,8 +46,6 @@ namespace Assignment1
             b.Append("----No other vertices");
             b.AppendLine();
         };
-
-       
 
         public Digraph() : this(new List<Vertex<V,L>>(), new List<Edge<E,V,L>>()) { }
 
@@ -207,27 +205,44 @@ namespace Assignment1
                 .ToList();
         }
 
+        // Overrides ToString
+        // Prints out count of vertices and edges
+        // Prints out all Vertices v identifiers as well as all of v's successor vertex identifiers
         public override string ToString()
         {
-            //return base.ToString();
             var builder = new StringBuilder();
+            builder.AppendFormat("Graph G has {0} vertices in set V", _vertices.Count());
+            builder.AppendLine();
+            builder.AppendFormat("Graph G has {0} edges in set E", _edges.Count());
+            builder.AppendLine();
+            Array.ForEach(_vertices.ToArray(),v => ComposeBuilderActions(v, builder));
+            return builder.ToString();
+        }
 
-            foreach (var v in _vertices)
+        // Private methods
+        private void ComposeBuilderActions(Vertex<V, L> vertex, StringBuilder builder)
+        {
+            ComposeBuilderActions(vertex, builder, _buildPredecessor, _buildSuccessor, _emptySuccessor);
+        }
+
+        // overload in case we want to pass in different lambdas to customize the string building
+        private void ComposeBuilderActions(
+            Vertex<V, L> vertex,
+            StringBuilder builder,
+            Action<Vertex<V, L>, StringBuilder> predecessorAction,
+            Action<Vertex<V, L>, StringBuilder> successorAction,
+            Action<StringBuilder> emptyAction)
+        {
+            predecessorAction(vertex, builder);
+            var successors = FromEdges(vertex);
+
+            if (successors.Any())
             {
-                _buildPredecessor(v, builder);
-                var successors = FromEdges(v);
-                if (successors.Any())
-                {
-                    foreach (var s in successors)
-                    {
-                        _buildSuccessor(s, builder);
-                    }
-                    continue;
-                }
-                _emptySuccessor(builder);
+                Array.ForEach(successors.ToArray(), s => successorAction(s, builder));
+                return;
             }
 
-            return builder.ToString();
+            emptyAction(builder);
         }
     }
 }
