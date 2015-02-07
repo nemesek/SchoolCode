@@ -8,7 +8,7 @@ namespace Assignment1
     // The IConvertible Constraint forces V to be of type Boolean, Byte, Char, DateTime, Decimal, Double
     // Int (16, 32 and 64-bit), SByte, Single (float), String, or UInt (16, 32 and 64-bit)
     // Without the constraint equality checks against reference types that don't override Equals
-    // would not work since Vertex implementation is immutable
+    // would not work since Vertex implementation is immutable and therefore the equality by ref would fail
     public class Digraph<V,L,E> where V : IConvertible
     {
         // sets
@@ -35,6 +35,9 @@ namespace Assignment1
 
         public bool IsEmpty{ get { return _vertices.Count == 0; } }
 
+        // adds vertex v to V'
+        // constructs G'=(V',E) and returns G'
+        // throws exception if vertex v already exists in V
         public Digraph<V,L,E> AddVertex(Vertex<V,L> vertex, L label)
         {
             if (_vertices.Any(v => v.Identifier.Equals(vertex.Identifier))) throw new ArgumentException(string.Format("Vertex Id {0} must be unique", vertex.Identifier));
@@ -71,6 +74,8 @@ namespace Assignment1
             return new Digraph<V,L,E>(updatedVerticesList, _edges);
         }
 
+        // Returns vertex v label where v in V 
+        // Throws exception if v not in V
         public L GetVertex(Vertex<V,L> vertex)
         {
             var vertexToGet = _vertexFilter(_vertices, vertex.Identifier);
@@ -131,6 +136,8 @@ namespace Assignment1
             return new Digraph<V,L,E>(_vertices, updatedEdgeList);
         }
 
+        // returns edge e label where e in E && e = (v1,v2)
+        // throws exception if e not in E 
         public E GetEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2)
         {
             var edge = _edges.SingleOrDefault(e => _edgeFilter(e,vertex1, vertex2));
