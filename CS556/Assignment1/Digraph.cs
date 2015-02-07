@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -23,7 +24,30 @@ namespace Assignment1
         // exception message builders
         private readonly Func<V,string> _missingVertexExceptionMessageFunc = id => string.Format("Vertex Id {0} is not an element within V", id);
         private readonly Func<V,V,string> _missingEdgeExceptionMessageFunc = (v1, v2) => string.Format("Edge from vertex {0} to {1} is not an element within E", v1, v2);
-        
+
+        // ToString helpers
+        private readonly Action<Vertex<V, L>, StringBuilder> _buildPredecessor = (v, b) =>
+        {
+            b.Append("Vertex with Id ");
+            b.Append(v.Identifier.ToString(CultureInfo.InvariantCulture));
+            b.Append(" is Direct Predecessor of: ");
+            b.AppendLine();
+        };
+
+        private readonly Action<Vertex<V, L>, StringBuilder> _buildSuccessor = (v, b) =>
+        {
+            b.Append("----Successor Vertex with Id ");
+            b.Append(v.Identifier);
+            b.AppendLine();
+        };
+
+        private readonly Action<StringBuilder> _emptySuccessor = b =>
+        {
+            b.Append("----No other vertices");
+            b.AppendLine();
+        };
+
+       
 
         public Digraph() : this(new List<Vertex<V,L>>(), new List<Edge<E,V,L>>()) { }
 
@@ -191,32 +215,19 @@ namespace Assignment1
             foreach (var v in _vertices)
             {
                 _buildPredecessor(v, builder);
-
-                foreach (var p in FromEdges(v))
+                var successors = FromEdges(v);
+                if (successors.Any())
                 {
-                    _buildSucessor(p, builder);
+                    foreach (var s in successors)
+                    {
+                        _buildSuccessor(s, builder);
+                    }
+                    continue;
                 }
-
+                _emptySuccessor(builder);
             }
 
             return builder.ToString();
         }
-
-        private Action<Vertex<V, L>, StringBuilder> _buildPredecessor = (v,b) =>
-            {
-                b.Append("Vertex with Id ");
-                b.Append(v.Identifier.ToString());
-                b.Append(" is Direct Predecessor of: ");
-                b.AppendLine();
-            };
-
-        private Action<Vertex<V, L>, StringBuilder> _buildSucessor = (v, b) =>
-            {
-                b.Append("----Successor Vertex with Id ");
-                b.Append(v.Identifier);
-                b.AppendLine();
-            };
-
-
     }
 }
