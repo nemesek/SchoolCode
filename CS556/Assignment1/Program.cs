@@ -597,6 +597,5 @@ namespace Assignment1
             if (successors.Count() != 2) return Fail;
             return successors.Any(v => v.Identifier == vertex2.Identifier) && successors.Any(v => v.Identifier == vertex3.Identifier) ? Pass : Fail;
         }
-
     }
 }

@@ -6,17 +6,23 @@ namespace Assignment1
 {
     // V = Vertex Identifier, L = Vertex Label,  E = Edge Label
     // The IConvertible Constraint forces V to be of type Boolean, Byte, Char, DateTime, Decimal, Double
-    // Int (16, 32 and 64-bit), ,SByte, Single (float), String, or UInt (16, 32 and 64-bit)
+    // Int (16, 32 and 64-bit), SByte, Single (float), String, or UInt (16, 32 and 64-bit)
     // Without the constraint equality checks against reference types that don't override Equals
     // would not work since Vertex implementation is immutable
     public class Digraph<V,L,E> where V : IConvertible
     {
+        // sets
         private readonly IReadOnlyCollection<Vertex<V, L>> _vertices;
         private readonly IReadOnlyCollection<Edge<E,V,L>> _edges;
+
+        // vertex, edge predicates
+        private readonly Func<IReadOnlyCollection<Vertex<V, L>>, V, Vertex<V, L>> _vertexFilter = (set, id) => set.SingleOrDefault(v => v.Identifier.Equals(id));
         private readonly Func<Edge<E,V,L>, Vertex<V,L>, Vertex<V,L>, bool> _edgeFilter = (e, v1, v2) => e.DirectPredecessor.Identifier.Equals(v1.Identifier) && e.DirectSuccessor.Identifier.Equals(v2.Identifier);
+        
+        // exception message builders
         private readonly Func<V,string> _missingVertexExceptionMessageFunc = id => string.Format("Vertex Id {0} is not an element within V", id);
         private readonly Func<V,V,string> _missingEdgeExceptionMessageFunc = (v1, v2) => string.Format("Edge from vertex {0} to {1} is not an element within E", v1, v2);
-        private readonly Func<IReadOnlyCollection<Vertex<V,L>>,V,Vertex<V,L>> _getVertexByIdFunc = (set,id) => set.SingleOrDefault(v => v.Identifier.Equals(id));
+        
 
         public Digraph() : this(new List<Vertex<V,L>>(), new List<Edge<E,V,L>>()) { }
 
@@ -42,7 +48,7 @@ namespace Assignment1
 
         public Digraph<V,L,E> RemoveVertex(Vertex<V,L> vertex)
         {
-            var vertexToRemove = _getVertexByIdFunc(_vertices,vertex.Identifier);
+            var vertexToRemove = _vertexFilter(_vertices,vertex.Identifier);
             if (vertexToRemove == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex.Identifier));
 
             var updatedVerticesList = _vertices.ToList();
@@ -54,7 +60,7 @@ namespace Assignment1
 
         public Digraph<V,L,E> UpdateVertex(Vertex<V,L> vertex, L label)
         {
-            var vertexToUpdate = _getVertexByIdFunc(_vertices, vertex.Identifier);
+            var vertexToUpdate = _vertexFilter(_vertices, vertex.Identifier);
             if (vertexToUpdate == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex.Identifier));
 
             var updatedVertex = new Vertex<V,L>(vertexToUpdate.Identifier, label);
@@ -67,7 +73,7 @@ namespace Assignment1
 
         public L GetVertex(Vertex<V,L> vertex)
         {
-            var vertexToGet = _getVertexByIdFunc(_vertices, vertex.Identifier);
+            var vertexToGet = _vertexFilter(_vertices, vertex.Identifier);
             if (vertexToGet == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex.Identifier));
 
             return vertexToGet.Label;
@@ -75,7 +81,7 @@ namespace Assignment1
 
         public bool HasVertex(Vertex<V,L> vertex)
         {
-            return _getVertexByIdFunc(_vertices, vertex.Identifier) != null;
+            return _vertexFilter(_vertices, vertex.Identifier) != null;
         }
 
         public IEnumerable<Vertex<V,L>> AllVertices()
@@ -85,10 +91,10 @@ namespace Assignment1
 
         public Digraph<V,L,E> AddEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2, E label)
         {
-            var source = _getVertexByIdFunc(_vertices,vertex1.Identifier);
+            var source = _vertexFilter(_vertices,vertex1.Identifier);
             if (source == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex1.Identifier));
 
-            var destination = _getVertexByIdFunc(_vertices,vertex2.Identifier);
+            var destination = _vertexFilter(_vertices,vertex2.Identifier);
             if (destination == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex2.Identifier));
             
             var edge = new Edge<E,V,L>(label, vertex1, vertex2);
@@ -145,6 +151,5 @@ namespace Assignment1
                 .Select(e => e.DirectSuccessor)
                 .ToList();
         }
-
     }
 }
