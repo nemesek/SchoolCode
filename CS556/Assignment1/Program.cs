@@ -69,8 +69,6 @@ namespace Assignment1
              * ----Successor Vertex with Id 2
              */
             OutputGraphStringRepresentation();
-
-
         }
 
         static string New_Graph_CreatesAndReturnsANewInstanceOfTheGraphADT()

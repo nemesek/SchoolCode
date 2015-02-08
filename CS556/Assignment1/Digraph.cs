@@ -65,9 +65,10 @@ namespace Assignment1
 
         // creates V' = V + v
         // constructs G'=(V',E) and returns G'
-        // throws exception if vertex v already exists in V
+        // throws exception if vertex v already exists in V or if v is null
         public Digraph<V,L,E> AddVertex(Vertex<V,L> vertex, L label)
         {
+            if (vertex == null) throw new ArgumentNullException("vertex");
             if (_vertices.Any(v => v.Identifier.Equals(vertex.Identifier))) throw new ArgumentException(string.Format("Vertex Id {0} must be unique", vertex.Identifier));
 
             var vertexToAdd = new Vertex<V,L>(vertex.Identifier, label);
@@ -79,9 +80,10 @@ namespace Assignment1
 
         // creates V' = V - v
         // constructs G'=(V',E) and returns G'
-        // throws exception if v not in V
+        // throws exception if v not in V or if v is null
         public Digraph<V,L,E> RemoveVertex(Vertex<V,L> vertex)
         {
+            if (vertex == null) throw new ArgumentNullException("vertex");
             var vertexToRemove = _vertexFilter(_vertices,vertex.Identifier);
             if (vertexToRemove == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex.Identifier));
 
@@ -93,9 +95,10 @@ namespace Assignment1
 
         // creates V' = (V - v) + v'
         // constructs G'=(V',E) and returns G'
-        // throws exception if v not in V
+        // throws exception if v not in V or if v is null
         public Digraph<V,L,E> UpdateVertex(Vertex<V,L> vertex, L label)
         {
+            if (vertex == null) throw new ArgumentNullException("vertex");
             var vertexToUpdate = _vertexFilter(_vertices, vertex.Identifier);
             if (vertexToUpdate == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex.Identifier));
 
@@ -108,9 +111,10 @@ namespace Assignment1
         }
 
         // Returns vertex v label where v in V 
-        // Throws exception if v not in V
+        // Throws exception if v not in V or if v is null
         public L GetVertex(Vertex<V,L> vertex)
         {
+            if (vertex == null) throw new ArgumentNullException("vertex");
             var vertexToGet = _vertexFilter(_vertices, vertex.Identifier);
             if (vertexToGet == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex.Identifier));
 
@@ -118,8 +122,10 @@ namespace Assignment1
         }
 
         // Returns true if v in V otherwise false
+        // throws exception if v is null
         public bool HasVertex(Vertex<V,L> vertex)
         {
+            if (vertex == null) throw new ArgumentNullException("vertex");
             return _vertexFilter(_vertices, vertex.Identifier) != null;
         }
 
@@ -131,9 +137,12 @@ namespace Assignment1
 
         // creates E' = E + e
         // constructs G' = (V, E') and returns G'
-        // throws exception if v1 not in V || v2 not in V
+        // throws exception if v1 not in V || v2 not in V or if v1 is null or if v2 is null
         public Digraph<V,L,E> AddEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2, E label)
         {
+            if (vertex1 == null) throw new ArgumentNullException("vertex1");
+            if (vertex2 == null) throw new ArgumentNullException("vertex2");
+
             var source = _vertexFilter(_vertices,vertex1.Identifier);
             if (source == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex1.Identifier));
 
@@ -150,9 +159,12 @@ namespace Assignment1
 
         // creates E' = E - e
         // constructs G' = (V, E') and returns G'
-        // throws exception if e not in E
+        // throws exception if e not in E or if v1 is null or if v2 is null
         public Digraph<V,L,E> RemoveEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2)
         {
+            if (vertex1 == null) throw new ArgumentNullException("vertex1");
+            if (vertex2 == null) throw new ArgumentNullException("vertex2");
+
             var edgeToRemove = _edges.SingleOrDefault(e => _edgeFilter(e,vertex1, vertex2));
 
             if (edgeToRemove == null) throw new ArgumentException(_missingEdgeExceptionMessageFunc(vertex1.Identifier, vertex2.Identifier));
@@ -165,9 +177,12 @@ namespace Assignment1
 
         // creates E' = (E - e) + e'
         // constructs G' = (V, E') and returns G'
-        // throws exception if e not in E
+        // throws exception if e not in E or if v1 is null or if v2 is null
         public Digraph<V,L,E> UpdateEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2, E label)
         {
+            if (vertex1 == null) throw new ArgumentNullException("vertex1");
+            if (vertex2 == null) throw new ArgumentNullException("vertex2");
+
             var edgeToUpdate = _edges.SingleOrDefault(e => _edgeFilter(e,vertex1, vertex2));
 
             if (edgeToUpdate == null) throw new ArgumentException(_missingEdgeExceptionMessageFunc(vertex1.Identifier, vertex2.Identifier));
@@ -181,9 +196,12 @@ namespace Assignment1
         }
 
         // returns edge e label where e in E && e = (v1,v2)
-        // throws exception if e not in E 
+        // throws exception if e not in E or if v1 is null or if v2 is null
         public E GetEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2)
         {
+            if (vertex1 == null) throw new ArgumentNullException("vertex1");
+            if (vertex2 == null) throw new ArgumentNullException("vertex2");
+
             var edge = _edges.SingleOrDefault(e => _edgeFilter(e,vertex1, vertex2));
             if (edge == null) throw new ArgumentException(_missingEdgeExceptionMessageFunc(vertex1.Identifier, vertex2.Identifier));
 
@@ -191,14 +209,20 @@ namespace Assignment1
         }
 
         // returns true if e in E otherwise false
+        // throws exception if v1 is null or if v2 is null
         public bool HasEdge(Vertex<V,L> vertex1, Vertex<V,L> vertex2)
         {
+            if (vertex1 == null) throw new ArgumentNullException("vertex1");
+            if (vertex2 == null) throw new ArgumentNullException("vertex2");
             return _edges.Any(e => _edgeFilter(e,vertex1, vertex2));
         }
 
         // returns all directSuccessors of v
+        // throws exception if v is null
         public IEnumerable<Vertex<V,L>> FromEdges(Vertex<V,L> vertex)
         {
+            if (vertex == null) throw new ArgumentNullException("vertex");
+
             return _edges
                 .Where(e => e.DirectPredecessor.Identifier.Equals(vertex.Identifier))
                 .Select(e => e.DirectSuccessor)
@@ -225,7 +249,9 @@ namespace Assignment1
             ComposeBuilderActions(vertex, builder, _buildPredecessor, _buildSuccessor, _emptySuccessor);
         }
 
-        // overload in case we want to pass in different lambdas to customize the string building
+        // overloaded in case we want to pass in different lambdas to customize the string building
+        // This method combines various functions to generate string output for printing the vertex info and 
+        // the info of the vertex's direct successors
         private void ComposeBuilderActions(
             Vertex<V, L> vertex,
             StringBuilder builder,
