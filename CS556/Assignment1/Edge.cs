@@ -10,10 +10,13 @@ namespace Assignment1
         private readonly E _label;
         private readonly Tuple<Vertex<V,L>, Vertex<V,L>> _arc;
 
-        public Edge(E label, Vertex<V,L> source, Vertex<V,L> destination)
+        public Edge(E label, Vertex<V,L> predecessor, Vertex<V,L> successor)
         {
+            if (predecessor == null) throw new ArgumentNullException("predecessor");
+            if (successor == null) throw new ArgumentNullException("successor");
+
             _label = label;
-            _arc = new Tuple<Vertex<V,L>, Vertex<V,L>>(source, destination);
+            _arc = new Tuple<Vertex<V,L>, Vertex<V,L>>(predecessor, successor);
         }
 
         public E Label { get { return _label; } }
