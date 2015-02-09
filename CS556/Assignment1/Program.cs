@@ -46,7 +46,7 @@ namespace Assignment1
             Console.WriteLine(Has_Edge_ReturnsTrueWhenEdgeFromV1ToV2InGraphG());    // PASS
             Console.WriteLine(Has_Edge_ReturnsFalseWhenEdgeFromV1ToV2NotInGraphG());    // PASS
             Console.WriteLine("===============all_vertices tests:===============");
-            Console.WriteLine(All_Vertices_ReturnsEmptyWhenGraphHasNoVertices());   // PASS
+            Console.WriteLine(All_Vertices_ReturnsEmptyWhenGraphHasNoVertices());   // PASS     
             Console.WriteLine(All_Vertices_ReturnsEnumerableOfAllVertices());   // PASS
             Console.WriteLine("===============from_edges tests:===============");
             Console.WriteLine(From_Edges_ReturnsEmptyWhenVertexHasNoDirectSuccessors());    // PASS
