@@ -18,15 +18,15 @@ namespace Assignment1
         private readonly IReadOnlyCollection<Edge<E,V,L>> _edges;
 
         // vertex and edge predicates
-        private readonly Func<IReadOnlyCollection<Vertex<V, L>>, V, Vertex<V, L>> _vertexFilter = (set, id) => set.SingleOrDefault(v => v.Identifier.Equals(id));
-        private readonly Func<Edge<E,V,L>, Vertex<V,L>, Vertex<V,L>, bool> _edgeFilter = (e, v1, v2) => e.DirectPredecessor.Identifier.Equals(v1.Identifier) && e.DirectSuccessor.Identifier.Equals(v2.Identifier);
+        private readonly Func<IReadOnlyCollection<Vertex<V, L>>, V, Vertex<V, L>> _getVertexByIdFunc = (set, id) => set.SingleOrDefault(v => v.Identifier.Equals(id));
+        private readonly Func<Edge<E,V,L>, Vertex<V,L>, Vertex<V,L>, bool> _getEdgeByVerticesFunc = (e, v1, v2) => e.DirectPredecessor.Identifier.Equals(v1.Identifier) && e.DirectSuccessor.Identifier.Equals(v2.Identifier);
         
         // exception message builders
         private readonly Func<V,string> _missingVertexExceptionMessageFunc = id => string.Format("Vertex Id {0} is not an element within V", id);
         private readonly Func<V,V,string> _missingEdgeExceptionMessageFunc = (v1, v2) => string.Format("Edge from vertex {0} to {1} is not an element within E", v1, v2);
 
-        // ToString helpers
-        private readonly Action<Vertex<V, L>, StringBuilder> _buildPredecessor = (v, b) =>
+        // ToString actions
+        private static readonly Action<Vertex<V, L>, StringBuilder> _buildVertexString = (v, b) =>
         {
             b.Append("Vertex with Id ");
             b.Append(v.Identifier.ToString(CultureInfo.InvariantCulture));
@@ -34,17 +34,36 @@ namespace Assignment1
             b.AppendLine();
         };
 
-        private readonly Action<Vertex<V, L>, StringBuilder> _buildSuccessor = (v, b) =>
+        private static readonly Action<Vertex<V, L>, StringBuilder> _buildSuccessorsString = (v, b) =>
         {
             b.Append("----Successor Vertex with Id ");
             b.Append(v.Identifier);
             b.AppendLine();
         };
 
-        private readonly Action<StringBuilder> _emptySuccessor = b =>
+        private static readonly Action<StringBuilder> _buildEmptySuccessorsString = b =>
         {
             b.Append("----No other vertices");
             b.AppendLine();
+        };
+
+        // This Action combines various functions to generate string output for printing the vertex info and 
+        // the info of the vertex's direct successors
+        private static readonly Action<Vertex<V, L>, StringBuilder, Func<Vertex<V,L>, IEnumerable<Vertex<V,L>>>> _composeVertexToString = (v, b, filter) =>
+        {
+            {
+                _buildVertexString(v, b);
+                var successors = filter(v);
+
+                if (successors.Any())
+                {
+                    Array.ForEach(successors.ToArray(), s => _buildSuccessorsString(s, b));
+                    return;
+                }
+
+                _buildEmptySuccessorsString(b);
+            }
+
         };
 
         public Digraph() : this(new List<Vertex<V,L>>(), new List<Edge<E,V,L>>()) { }
@@ -84,7 +103,7 @@ namespace Assignment1
         public Digraph<V,L,E> RemoveVertex(Vertex<V,L> vertex)
         {
             if (vertex == null) throw new ArgumentNullException("vertex");
-            var vertexToRemove = _vertexFilter(_vertices,vertex.Identifier);
+            var vertexToRemove = _getVertexByIdFunc(_vertices,vertex.Identifier);
             if (vertexToRemove == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex.Identifier));
 
             var updatedVerticesList = _vertices.ToList();
@@ -99,7 +118,7 @@ namespace Assignment1
         public Digraph<V,L,E> UpdateVertex(Vertex<V,L> vertex, L label)
         {
             if (vertex == null) throw new ArgumentNullException("vertex");
-            var vertexToUpdate = _vertexFilter(_vertices, vertex.Identifier);
+            var vertexToUpdate = _getVertexByIdFunc(_vertices, vertex.Identifier);
             if (vertexToUpdate == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex.Identifier));
 
             var updatedVertex = new Vertex<V,L>(vertexToUpdate.Identifier, label);
@@ -115,7 +134,7 @@ namespace Assignment1
         public L GetVertex(Vertex<V,L> vertex)
         {
             if (vertex == null) throw new ArgumentNullException("vertex");
-            var vertexToGet = _vertexFilter(_vertices, vertex.Identifier);
+            var vertexToGet = _getVertexByIdFunc(_vertices, vertex.Identifier);
             if (vertexToGet == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex.Identifier));
 
             return vertexToGet.Label;
@@ -126,7 +145,7 @@ namespace Assignment1
         public bool HasVertex(Vertex<V,L> vertex)
         {
             if (vertex == null) throw new ArgumentNullException("vertex");
-            return _vertexFilter(_vertices, vertex.Identifier) != null;
+            return _getVertexByIdFunc(_vertices, vertex.Identifier) != null;
         }
 
         // Returns V
@@ -143,10 +162,10 @@ namespace Assignment1
             if (vertex1 == null) throw new ArgumentNullException("vertex1");
             if (vertex2 == null) throw new ArgumentNullException("vertex2");
 
-            var source = _vertexFilter(_vertices,vertex1.Identifier);
+            var source = _getVertexByIdFunc(_vertices,vertex1.Identifier);
             if (source == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex1.Identifier));
 
-            var destination = _vertexFilter(_vertices,vertex2.Identifier);
+            var destination = _getVertexByIdFunc(_vertices,vertex2.Identifier);
             if (destination == null) throw new ArgumentException(_missingVertexExceptionMessageFunc(vertex2.Identifier));
             
             var edge = new Edge<E,V,L>(label, vertex1, vertex2);
@@ -165,7 +184,7 @@ namespace Assignment1
             if (vertex1 == null) throw new ArgumentNullException("vertex1");
             if (vertex2 == null) throw new ArgumentNullException("vertex2");
 
-            var edgeToRemove = _edges.SingleOrDefault(e => _edgeFilter(e,vertex1, vertex2));
+            var edgeToRemove = _edges.SingleOrDefault(e => _getEdgeByVerticesFunc(e,vertex1, vertex2));
 
             if (edgeToRemove == null) throw new ArgumentException(_missingEdgeExceptionMessageFunc(vertex1.Identifier, vertex2.Identifier));
 
@@ -183,7 +202,7 @@ namespace Assignment1
             if (vertex1 == null) throw new ArgumentNullException("vertex1");
             if (vertex2 == null) throw new ArgumentNullException("vertex2");
 
-            var edgeToUpdate = _edges.SingleOrDefault(e => _edgeFilter(e,vertex1, vertex2));
+            var edgeToUpdate = _edges.SingleOrDefault(e => _getEdgeByVerticesFunc(e,vertex1, vertex2));
 
             if (edgeToUpdate == null) throw new ArgumentException(_missingEdgeExceptionMessageFunc(vertex1.Identifier, vertex2.Identifier));
 
@@ -202,7 +221,7 @@ namespace Assignment1
             if (vertex1 == null) throw new ArgumentNullException("vertex1");
             if (vertex2 == null) throw new ArgumentNullException("vertex2");
 
-            var edge = _edges.SingleOrDefault(e => _edgeFilter(e,vertex1, vertex2));
+            var edge = _edges.SingleOrDefault(e => _getEdgeByVerticesFunc(e,vertex1, vertex2));
             if (edge == null) throw new ArgumentException(_missingEdgeExceptionMessageFunc(vertex1.Identifier, vertex2.Identifier));
 
             return edge.Label;
@@ -214,7 +233,7 @@ namespace Assignment1
         {
             if (vertex1 == null) throw new ArgumentNullException("vertex1");
             if (vertex2 == null) throw new ArgumentNullException("vertex2");
-            return _edges.Any(e => _edgeFilter(e,vertex1, vertex2));
+            return _edges.Any(e => _getEdgeByVerticesFunc(e,vertex1, vertex2));
         }
 
         // returns all directSuccessors of v
@@ -239,36 +258,8 @@ namespace Assignment1
             builder.AppendLine();
             builder.AppendFormat("Graph G has {0} edges in set E", _edges.Count());
             builder.AppendLine();
-            Array.ForEach(_vertices.ToArray(),v => ComposeBuilderActions(v, builder));
+            Array.ForEach(_vertices.ToArray(), v => _composeVertexToString(v, builder, this.FromEdges));
             return builder.ToString();
-        }
-
-        // Private methods
-        private void ComposeBuilderActions(Vertex<V, L> vertex, StringBuilder builder)
-        {
-            ComposeBuilderActions(vertex, builder, _buildPredecessor, _buildSuccessor, _emptySuccessor);
-        }
-
-        // overloaded in case we want to pass in different lambdas to customize the string building
-        // This method combines various functions to generate string output for printing the vertex info and 
-        // the info of the vertex's direct successors
-        private void ComposeBuilderActions(
-            Vertex<V, L> vertex,
-            StringBuilder builder,
-            Action<Vertex<V, L>, StringBuilder> predecessorAction,
-            Action<Vertex<V, L>, StringBuilder> successorAction,
-            Action<StringBuilder> emptyAction)
-        {
-            predecessorAction(vertex, builder);
-            var successors = FromEdges(vertex);
-
-            if (successors.Any())
-            {
-                Array.ForEach(successors.ToArray(), s => successorAction(s, builder));
-                return;
-            }
-
-            emptyAction(builder);
         }
     }
 }
