@@ -1,0 +1,49 @@
+Specification Document
+	-	Create Graph ADT that satisfies the interface described in http://www.cs.olemiss.edu/~hcc/csci556/homework/556hw01.html
+	-	Language chosen C#
+		-	4 files as part of the project
+		-	Digraph.cs has the generic implentation of the Graph ADT
+			-	Generics are V = Vertex Identifier, L = Vertex Label, E = Edge label
+			-	Has a generic constraint on V to require V implement IConvertible
+				-	 The IConvertible Constraint forces V to be of type Boolean, Byte, Char, DateTime, Decimal, Double, Int (16, 32 and 64-bit), SByte, Single (float), String, or UInt (16, 32 and 64-bit). Without the constraint equality checks against reference types that don't override Equals would not work since Vertex implementation is immutable and therefore the equality by ref would fail
+			-	Immutable
+				- Vertex and Edge sets are IReadOnlyCollection which doesn't allow add or remove operations to the collection
+				- All private instance and static fields have the readonly keyword, which indicates they can only be set on initialization
+				- All mutators return a new instance of the Digraph class
+			- 	Overrides ToString() to print out all vertices and their direct successors
+			-	Tried to make as functional as possible.  
+				- No explicit loops
+				- All private methods were implemented as Funcs or Actions
+				- Heavy usage of lambdas
+			-	Avoided else blocks to reduce branching and increase readability
+			-	Avoided duplicating code. 
+				-	If wrote a line more than once I typically would refactor and create a private Func
+			-	Guard clauses for all methods to ensure preconditions are met
+				-	throw exceptions if null argument or if argument is not valid for the operation
+			-	Minimized Implementation details leaking out
+				-	method signatures that returned collections would be interface types e.g. IEnumerable
+				-	made the main the ctor private to avoid clients no the underlying vertex and edge sets were lists
+		Vertex.cs 
+			-	Generics are V = Vertex Identifier, L = Vertex Label
+				-	No constraint on V like I did for Digraph, as that was only a concern for identification between multiple vertices in a given graph 
+				-	If V is a reference type it must not be null.
+			-	Immutable
+				-	all fields are readonly
+		Edge.cs
+			-	Generics are E = Edge, V = Vertex, and L = Label
+			-	immutable
+				- All fields are readonly
+			-	Used a tuple internally to represent the arc between vertices but for readability and encapsulation returned those values as properties (DirectSuccessor, DirectPredecessor)
+		Program.cs
+			-	Driver program used to test the Graph ADT
+			-	Runs 27 tests with a naming convention of Operation_Action_Conditions
+				-	e.g. Is_Empty_ReturnsTrueWhenGraphHasNoVertices()
+			-	Each test will output PASS or FAIL depending on how the assertions for conditions go  (Right now each test return PASS
+				-	I didn't use the built in ASSERT methods.  Just checked truth values and returned PASS/FAIL on that
+			-	Lot of code duplication between tests.  I did this so each test could be reviewed in isolation without having to jump around the file.
+			- 	Also displays output of overriden ToString()
+			-	For the console output refer to the accompanying Assignment1ConsoleDriverOutput.txt
+			
+
+			
+		

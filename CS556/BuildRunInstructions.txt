@@ -1,0 +1,6 @@
+1) From a machine with Visual Studio 2013 unzip Assingment1.zip (I verified on Adler)
+2) Double click on Assignment1.sln
+3) Press Control + Shift + B to build the solution
+4) Press Control + F5 to run the console driver program (Note the output is in the accompanying Assignment1ConsoleDriverOutput.txt)
+
+I was also able to get the program to run on my Mac, using Sublime Extensions to build, and Mono to run my program.  Let me know if you want me to send you those instructions
