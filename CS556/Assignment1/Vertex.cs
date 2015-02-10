@@ -1,4 +1,6 @@
-﻿namespace Assignment1
+﻿using System;
+
+namespace Assignment1
 {
     // V = Vertex Identifier
     // L = Vertex Label
@@ -9,12 +11,14 @@
 
         public Vertex(V identifier)
         {
+            if (default(V) == null && identifier == null) throw new ArgumentException("identifier");
             _identifier = identifier;
             _label = default(L);
         }
 
         public Vertex(V identifier, L label)
         {
+            if (default(V) == null && identifier == null) throw new ArgumentException("identifier");
             _identifier = identifier;
             _label = label;
         }
