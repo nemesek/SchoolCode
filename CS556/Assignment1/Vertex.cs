@@ -11,14 +11,14 @@ namespace Assignment1
 
         public Vertex(V identifier)
         {
-            if (default(V) == null && identifier == null) throw new ArgumentException("identifier");
+            if (!typeof(V).IsValueType && identifier == null) throw new ArgumentException("identifier");
             _identifier = identifier;
             _label = default(L);
         }
 
         public Vertex(V identifier, L label)
         {
-            if (default(V) == null && identifier == null) throw new ArgumentException("identifier");
+            if (!typeof(V).IsValueType && identifier == null) throw new ArgumentException("identifier");
             _identifier = identifier;
             _label = label;
         }
