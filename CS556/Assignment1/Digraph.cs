@@ -26,7 +26,7 @@ namespace Assignment1
         private readonly Func<V,V,string> _missingEdgeExceptionMessageFunc = (v1, v2) => string.Format("Edge from vertex {0} to {1} is not an element within E", v1, v2);
 
         // ToString actions
-        private static readonly Action<Vertex<V, L>, StringBuilder> _buildVertexString = (v, b) =>
+        private static readonly Action<Vertex<V, L>, StringBuilder> BuildVertexString = (v, b) =>
         {
             b.Append("Vertex with Id ");
             b.Append(v.Identifier.ToString(CultureInfo.InvariantCulture));
@@ -34,14 +34,14 @@ namespace Assignment1
             b.AppendLine();
         };
 
-        private static readonly Action<Vertex<V, L>, StringBuilder> _buildSuccessorsString = (v, b) =>
+        private static readonly Action<Vertex<V, L>, StringBuilder> BuildSuccessorsString = (v, b) =>
         {
             b.Append("----Successor Vertex with Id ");
             b.Append(v.Identifier);
             b.AppendLine();
         };
 
-        private static readonly Action<StringBuilder> _buildEmptySuccessorsString = b =>
+        private static readonly Action<StringBuilder> BuildEmptySuccessorsString = b =>
         {
             b.Append("----No other vertices");
             b.AppendLine();
@@ -49,19 +49,19 @@ namespace Assignment1
 
         // This Action combines various functions to generate string output for printing the vertex info and 
         // the info of the vertex's direct successors
-        private static readonly Action<Vertex<V, L>, StringBuilder, Func<Vertex<V,L>, IEnumerable<Vertex<V,L>>>> _composeVertexToString = (v, b, filter) =>
+        private static readonly Action<Vertex<V, L>, StringBuilder, Func<Vertex<V,L>, IEnumerable<Vertex<V,L>>>> ComposeVertexToString = (v, b, filter) =>
         {
             {
-                _buildVertexString(v, b);
+                BuildVertexString(v, b);
                 var successors = filter(v);
 
                 if (successors.Any())
                 {
-                    Array.ForEach(successors.ToArray(), s => _buildSuccessorsString(s, b));
+                    Array.ForEach(successors.ToArray(), s => BuildSuccessorsString(s, b));
                     return;
                 }
 
-                _buildEmptySuccessorsString(b);
+                BuildEmptySuccessorsString(b);
             }
 
         };
@@ -258,7 +258,7 @@ namespace Assignment1
             builder.AppendLine();
             builder.AppendFormat("Graph G has {0} edges in set E", _edges.Count());
             builder.AppendLine();
-            Array.ForEach(_vertices.ToArray(), v => _composeVertexToString(v, builder, this.FromEdges));
+            Array.ForEach(_vertices.ToArray(), v => ComposeVertexToString(v, builder, this.FromEdges));
             return builder.ToString();
         }
     }
