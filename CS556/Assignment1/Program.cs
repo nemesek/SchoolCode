@@ -69,6 +69,7 @@ namespace Assignment1
              * ----Successor Vertex with Id 2
              */
             OutputGraphStringRepresentation();
+            Console.WriteLine("Hello World from Mac3");
         }
 
         static string New_Graph_CreatesAndReturnsANewInstanceOfTheGraphADT()
