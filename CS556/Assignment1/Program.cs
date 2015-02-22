@@ -200,7 +200,8 @@ namespace Assignment1
         {
             // Arrange preconditions
             var graph = new Digraph<float, object, int>();
-            var vertex = new Vertex<float, object>(1/3);
+            var f = .33333f;
+            var vertex = new Vertex<float, object>(f);
             var object1 = new object();
             var graphPrime = graph.AddVertex(vertex,object1);
 
