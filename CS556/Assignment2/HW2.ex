@@ -78,15 +78,4 @@ defmodule HW2 do
   defp _reverse([],ys)      do ys end
   defp _reverse([x|xs], ys) do _reverse(xs, [x|ys]) end
 
-  defmodule Test do
-    def fizzbuzzWithZeroZeroX do
-      IO.puts "Calling fizzbuzz(0,0,9)"
-      if HW2.fizzbuzz(0,0,9) == "FizzBuzz" do
-        "Pass"
-      else
-        "Fail"
-      end
-    end
-    def fizzbuzzWithZeroXX, do: HW2.fizzbuzz(0,8,8)
-  end
 end
