@@ -1,0 +1,11 @@
+To run type from terminal: iex HW2.exs
+To run tests
+  - Load into iex
+  - HW2.Test.runTests()
+  - This will output whether or not the test passed or failed and what function is being tested
+    with which args are being passed.
+Structure of HW2.exs
+  - Problems were done in the order they were assigned
+  - There are comments that indicate which problem is being worked on
+  - At the bottom is the Test module.  There you can see the exact args and values being checked
+    for each of the tests
