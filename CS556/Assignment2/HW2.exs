@@ -79,14 +79,49 @@ defmodule HW2 do
   defp _reverse([x|xs], ys) do _reverse(xs, [x|ys]) end
 
   defmodule Test do
-    def fizzbuzzWithZeroZeroX do
-      IO.puts "Calling fizzbuzz(0,0,9)"
-      if HW2.fizzbuzz(0,0,9) == "FizzBuzz" do
-        "Pass"
-      else
-        "Fail"
-      end
+
+    def runTests() do
+      # fizzbuzz tests
+      _runTest(fn -> HW2.fizzbuzz(0,0,9) == "FizzBuzz" end, "Calling fizzbuzz(0,0,9)")
+      _runTest(fn -> HW2.fizzbuzz(0,9,9) == "Fizz" end, "Calling fizzbuzz(0,9,9)")
+      _runTest(fn -> HW2.fizzbuzz(1,0,2) == "Buzz" end, "Calling fizzbuzz(1,0,2)")
+      _runTest(fn -> HW2.fizzbuzz(7,4,1) == 1 end, "Calling fizzbuzz (7,4,1)")
+
+      # prefix tests
+      _runTest(fn -> HW2.prefix("mrs").("smith") == "mrs smith" end, "Calling prefix with mrs smith")
+      _runTest(fn -> HW2.prefix("").("smith") == " smith" end, "Calling prefix with empty smith")
+      _runTest(fn -> HW2.prefix("").("") == " " end, "Calling prefix with empty empty")
+      _runTest(fn -> HW2.prefix("mrs").("") == "mrs " end, "Calling prefix with mrs empty")
+
+      # sum tests
+      _runTest(fn -> HW2.sum(5) == 15 end, "Calling sum(5)")
+      _runTest(fn -> HW2.sum(0) == 0 end, "Calling sum(0)")
+
+      # Chop.guess tests
+      _runTest(fn -> HW2.Chop.guess(273, 1..1000) == 273 end, "Calling Chop.guess(273,1..1000)")
+      _runTest(fn -> HW2.Chop.guess(273, 1..5000) == 273 end, "Calling Chop.guess(273,1..5000)")
+
+      # mapsum tests
+      _runTest(fn -> HW2.mapsum([1,2,3], &(&1 * &1)) == 14 end, "Calling mapsum([1,2,3], &(&1 * &1))")
+      _runTest(fn -> HW2.mapsum([1,2,3], &(&1 + 10)) == 36 end, "Calling mapsum([1,2,3], &(&1 + 10))")
+      _runTest(fn -> HW2.mapsum([], fn -> 100 end) == 0 end, "Calling mapsum([])")
+
+      # max tests
+      _runTest(fn -> HW2.max([1,2,3]) == 3 end, "Calling max [1,2,3]")
+      _runTest(fn -> HW2.max([3,2,1]) == 3 end, "Calling max [3,2,1]")
+      _runTest(fn -> HW2.max([1,3,2]) == 3 end, "Calling max [1,3,2]")
+      _runTest(fn -> HW2.max([-1,-2,-4,-3]) == -1 end, "Calling max with all negatives")
+
+      # all? tests
+      _runTest(fn -> HW2.all?([1,2,3], &(&1 > 0)) end, "Calling all?[1,2,3] greater than zero -> T")
+      _runTest(fn -> !(HW2.all?([1,2,3], &(&1 > 100))) end, "Calling all?[1,2,3] greater than 100 -> F")
+      _runTest(fn -> !(HW2.all?([1,2,3], &(&1 > 1))) end, "Calling all? [1,2,3] greater than 1 -> F")
     end
-    def fizzbuzzWithZeroXX, do: HW2.fizzbuzz(0,8,8)
+    
+    defp _runTest(condition, message) do
+      IO.puts message
+      if condition.() do IO.puts "Passed" else IO.puts "Failed" end
+    end
   end
+
 end
