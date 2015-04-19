@@ -8,7 +8,7 @@ defmodule MS do
   end
 
   def to_slave(msg,n, master) do
-    IO.puts "Got message #{msg} sending to slave #{n}"
+    IO.puts "Got message #{msg} relaying to slave #{n}"
     send master, {n,msg}
   end
 
@@ -20,6 +20,7 @@ defmodule MS do
         send pid,{:shutdown}
         newPid = pid = spawn_link(MS,:slave,[])
         newPids = List.replace_at(pids,p-1,newPid)
+        IO.puts "Initialized new process for N = #{p}"
         _setupCallback(newPids)
       {p, msg} ->
         IO.puts "Router sending message #{msg}"
