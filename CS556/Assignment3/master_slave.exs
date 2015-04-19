@@ -1,14 +1,21 @@
 defmodule MS do
   def start(n) do
+    spawn(MS,:_start,[5])
+  end
+  def _start(n) do
      pids = _run(n,[])
-     IO.puts Enum.count(pids)
      _setupCallback(pids)
+  end
+
+  def to_slave(msg,n, master) do
+    IO.puts "Got message #{msg}"
+    send master, {n,msg}
   end
 
   defp _setupCallback(pids) do
     receive do
       {p, msg} ->
-        IO.puts "Got message #{msg}"
+        IO.puts "Got Internal message #{msg}"
         pid = Enum.at(pids,p-1)
         send pid,{msg}
         _setupCallback(pids)
@@ -24,7 +31,6 @@ defmodule MS do
   end
 
   def slave do
-    IO.puts "Started"
     receive do
       {msg} -> IO.puts "Processed: #{msg}"
       slave
