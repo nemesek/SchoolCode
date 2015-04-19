@@ -2,7 +2,7 @@ defmodule Star do
   def processMessage() do
     receive do
       {:shutdown} -> exit(:normal)
-       {msg} ->
+      {msg} ->
         IO.puts "Processed message #{msg}"
         processMessage
     end
