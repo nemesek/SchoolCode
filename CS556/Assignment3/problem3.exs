@@ -1,7 +1,7 @@
 defmodule Star do
   def processMessage() do
     receive do
-      {:shutdown} -> exit(:boom)
+      {:shutdown} -> exit(:normal)
        {msg} ->
         IO.puts "Processed message #{msg}"
         processMessage
@@ -17,7 +17,7 @@ defmodule Star do
   end
 
   defp _run(n,m,pids) do
-    Process.flag(:trap_exit,true)
+    #Process.flag(:trap_exit,true)
     pid = spawn_link(Star,:processMessage,[])
     _run(n-1,m,[pid|pids])
   end
