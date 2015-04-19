@@ -1,11 +1,10 @@
 defmodule Star do
   def process() do
-    IO.puts "Got Spawned"
     receive do
-       {msg} ->
-        IO.puts "Got a message #{msg}"
-        #send sender,{me,{:ok,"#{msg}"}}
       {:shutdown} -> exit(:boom)
+       {msg} ->
+        IO.puts "Processed message #{msg}"
+        process
     end
   end
 
@@ -14,9 +13,9 @@ defmodule Star do
      IO.puts "DONE SPAWNING"
      pids
      |> Enum.map(fn(p) -> sendMessages(m,p,self()) end)
-     IO.puts "Done"
+     IO.puts "DONE SENDING MESSAGES"
   end
-  
+
   defp _run(n,m,pids) do
     Process.flag(:trap_exit,true)
     pid = spawn_link(Star,:process,[])
@@ -29,15 +28,15 @@ defmodule Star do
     end
   end
 
-  def sendMessages(m, pid, sender) do _sendMessages(m, pid, "Blah",sender) end
-  defp _sendMessages(0, pid, _,_) do
+  def sendMessages(m, pid, sender) do _sendMessages(m, pid,sender) end
+  defp _sendMessages(0, pid,_) do
     send pid, {:shutdown}
   end
-  defp _sendMessages(m, pid, msg,sender) do
-    send pid,{"Blah"}
+  defp _sendMessages(m, pid,sender) do
+    send pid,{"Message Id: #{m}"}
     #handleCallback(pid)
-    _sendMessages(m-1,pid,msg,sender)
+    _sendMessages(m-1,pid,sender)
   end
 end
 
-Star.run(4,1)
+Star.run(4,2)
