@@ -13,6 +13,7 @@ defmodule MS do
 
   defp _setupCallback(pids) do
     receive do
+      {msg} -> IO.puts "MESSAGE RECEIVED: #{inspect msg}"
       {p,:normal} ->
         pid = Enum.at(pids,p-1)
         newPid = pid = spawn_link(MS,:slave,[])
@@ -37,7 +38,7 @@ defmodule MS do
     receive do
       {sender,{"die",p}} ->
         send sender,{p,:normal}
-        exit(:normal)
+        exit(:boom)
       {_,{msg,_}} -> IO.puts "Slave Processed: #{msg}"
       slave
     end
