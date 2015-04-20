@@ -13,18 +13,11 @@ defmodule MS do
 
   defp _setupCallback(pids) do
     receive do
-      {:EXIT,px,msg} ->
-        IO.puts "MESSAGE RECEIVED: #{inspect msg}"
-        index = Enum.find_index(pids,fn(p) -> p == px end)
+      {:EXIT,sender,msg} ->
+        index = Enum.find_index(pids,fn(p) -> p == sender end)
         newPid = pid = spawn_link(MS,:slave,[])
         newPids = List.replace_at(pids,index,newPid)
-        IO.puts "Initialized new process to replace dead process"
-        _setupCallback(newPids)
-      {p,:normal} ->
-        pid = Enum.at(pids,p-1)
-        newPid = pid = spawn_link(MS,:slave,[])
-        newPids = List.replace_at(pids,p-1,newPid)
-        IO.puts "Initialized new process for N = #{p}"
+        IO.puts "Initialized new process for N = #{msg}"
         _setupCallback(newPids)
       {p, msg} ->
         pid = Enum.at(pids,p-1)
@@ -43,8 +36,7 @@ defmodule MS do
   def slave do
     receive do
       {sender,{"die",p}} ->
-        # send sender,{p,:normal}
-        exit(:boom)
+        exit(p)
       {_,{msg,_}} -> IO.puts "Slave Processed: #{msg}"
       slave
     end
@@ -52,4 +44,3 @@ defmodule MS do
 end
 
 # pid = spawn(MS,:start,[5])
-# send pid, {2,"Hello"}
