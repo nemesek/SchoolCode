@@ -7,29 +7,29 @@ defmodule MS do
   end
   def _start(n) do
      pids = _run(n,[])
-     _setupCallback(pids)
+     _setupReceiveHandlers(pids)
   end
 
   def to_slave(msg,n) do
     send :global.whereis_name(@name), {n,msg}
   end
 
-  defp _setupCallback(pids) do
+  defp _setupReceiveHandlers(pids) do
     receive do
       {:EXIT,sender,msg} ->
         index = Enum.find_index(pids,fn(p) -> p == sender end)
         newPid = pid = spawn_link(MS,:slave,[msg])
         newPids = List.replace_at(pids,index,newPid)
         IO.puts "Initialized new process for N = #{msg}"
-        _setupCallback(newPids)
+        _setupReceiveHandlers(newPids)
       {p, msg} ->
         pid = Enum.at(pids,p-1)
         if pid == nil do
           IO.puts "#{p} is not a valid value for the range of processes."
-          _setupCallback(pids)
+          _setupReceiveHandlers(pids)
         else
           send pid,{msg}
-          _setupCallback(pids)
+          _setupReceiveHandlers(pids)
         end
       end
   end
@@ -44,6 +44,7 @@ defmodule MS do
   def slave(p) do
     receive do
       {"die"} -> exit(p)
+      {:die} -> exit(p)
       {msg} -> IO.puts "Slave #{p} Processed: #{msg}"
       slave(p)
     end
