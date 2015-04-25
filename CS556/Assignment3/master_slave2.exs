@@ -24,8 +24,13 @@ defmodule MS do
         _setupCallback(newPids)
       {p, msg} ->
         pid = Enum.at(pids,p-1)
-        send pid,{msg}
-        _setupCallback(pids)
+        if pid == nil do
+          IO.puts "#{p} is not a valid value for the range of processes."
+          _setupCallback(pids)
+        else
+          send pid,{msg}
+          _setupCallback(pids)
+        end
       end
   end
 
@@ -37,11 +42,10 @@ defmodule MS do
   end
 
   def slave(p) do
-    n = p
     receive do
       {"die"} -> exit(p)
-      {msg} -> IO.puts "Slave #{n} Processed: #{msg}"
-      slave(n)
+      {msg} -> IO.puts "Slave #{p} Processed: #{msg}"
+      slave(p)
     end
   end
 end
