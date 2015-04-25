@@ -1,6 +1,6 @@
 defmodule MS do
   def start(n) do
-    spawn(MS,:_start,[5])
+    spawn(MS,:_start,[n])
   end
   def _start(n) do
      pids = _run(n,[])
