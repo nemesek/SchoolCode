@@ -39,8 +39,40 @@ defmodule Star do
 end
 
 defmodule Test do
+  import :timer
   def run(n,m) do
     IO.puts "Testing with #{n} processes and #{m} messages"
     Star.run(n,m)
+  end
+  def run do
+    IO.puts "Testing with 5 processes and 8 messages"
+    Star.run(5,8)
+    sleep 500
+    IO.puts "**********Test Complete******************************"
+
+    IO.puts "Testing with 3 processes and 4 messages"
+    Star.run(3,4)
+    sleep 500
+    IO.puts "**********Test Complete******************************"
+
+    IO.puts "Testing with 0 processes and 5 messages"
+    Star.run(0,5)
+    sleep 500
+    IO.puts "**********Test Complete******************************"
+
+    IO.puts "Testing with 5 processes and 0 messages"
+    Star.run(5,0)
+    sleep 500
+    IO.puts "**********Test Complete******************************"
+
+    IO.puts "Testing with negative process and positive messages"
+    Star.run(-3,4)
+    sleep 500
+    IO.puts "**********Test Complete******************************"
+
+    IO.puts "Testing with positive process and negative message"
+    Star.run(4,-3)
+    sleep 500
+    IO.puts "**********Test Complete******************************"
   end
 end
