@@ -1,0 +1,11 @@
+1) Compile star.ex and master_slave.ex with elixirc or run build.sh
+2) iex test_driver.exs
+3) From within iex (these will execute a few automated tests with various ranges and values):
+  - Tester.runStarTest
+  - Tester.runMSTest
+
+To test yourself
+From iex:
+  - Star.run(n,m) -- where n = processes and m = number of messages to each process
+  - MS.start(N) -- where N = Number of slave processes
+    -- MS.to_slave(msg, N) -- if msg == "die" or :die the slave should exit
