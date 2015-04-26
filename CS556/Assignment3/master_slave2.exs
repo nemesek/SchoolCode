@@ -3,7 +3,8 @@ defmodule MS do
   def start(n) do
     pid = spawn(MS,:_start,[n])
     # per instructions registering as the registered process master
-    :global.register_name(@name,pid)
+    #:global.register_name(@name,pid)
+    Process.register(pid,@name)
   end
   def _start(n) do
      pids = _run(n,[])
@@ -11,7 +12,8 @@ defmodule MS do
   end
 
   def to_slave(msg,n) do
-    send :global.whereis_name(@name), {n,msg}
+    #send :global.whereis_name(@name), {n,msg}
+    Process.send(@name, {n,msg},[])
   end
 
   defp _setupReceiveHandlers(pids) do
@@ -41,6 +43,7 @@ defmodule MS do
     _run(n-1,[pid|pids])
   end
 
+  # for some reason spawn_link requires this function to be public
   def slave(p) do
     receive do
       {"die"} -> exit(p)
