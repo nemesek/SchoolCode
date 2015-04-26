@@ -45,33 +45,17 @@ defmodule Test do
     Star.run(n,m)
   end
   def run do
-    IO.puts "Testing with 5 processes and 8 messages"
-    Star.run(5,8)
-    sleep 500
-    IO.puts "**********Test Complete******************************"
+    _run(5,8,"Testing with 5 processes and 8 messages")
+    _run(3,4,"Testing with 3 processes and 4 messages")
+    _run(0,5,"Testing with 0 processes and 5 messages")
+    _run(5,0,"Testing with 5 processes and 0 messages")
+    _run(-3,4,"Testing with negative processes and positive messages")
+    _run(4,-3,"Testing with positive processes and negative messages")
+  end
 
-    IO.puts "Testing with 3 processes and 4 messages"
-    Star.run(3,4)
-    sleep 500
-    IO.puts "**********Test Complete******************************"
-
-    IO.puts "Testing with 0 processes and 5 messages"
-    Star.run(0,5)
-    sleep 500
-    IO.puts "**********Test Complete******************************"
-
-    IO.puts "Testing with 5 processes and 0 messages"
-    Star.run(5,0)
-    sleep 500
-    IO.puts "**********Test Complete******************************"
-
-    IO.puts "Testing with negative process and positive messages"
-    Star.run(-3,4)
-    sleep 500
-    IO.puts "**********Test Complete******************************"
-
-    IO.puts "Testing with positive process and negative message"
-    Star.run(4,-3)
+  defp _run(n,m,msg) do
+    IO.puts msg
+    Star.run(n,m)
     sleep 500
     IO.puts "**********Test Complete******************************"
   end
