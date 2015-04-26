@@ -1,9 +1,11 @@
 defmodule Star do
   def processMessage() do
     receive do
-      {:shutdown} -> exit(:normal)
+      {:shutdown} ->
+        IO.puts "++++++ #{inspect self} about to shutdown gracefully"
+        exit(:normal)
       {msg} ->
-        IO.puts "Processed message #{msg}"
+        IO.puts "#{inspect self} Processed message #{msg}"
         processMessage
     end
   end
@@ -18,8 +20,10 @@ defmodule Star do
 
   defp _run(n,m,pids) do
     #Process.flag(:trap_exit,true)
-    pid = spawn_link(Star,:processMessage,[])
-    _run(n-1,m,[pid|pids])
+    if n > 0 do
+      pid = spawn_link(Star,:processMessage,[])
+      _run(n-1,m,[pid|pids])
+    end
   end
 
   def sendMessages(m, pid) do _sendMessages(m, pid) end
@@ -27,9 +31,16 @@ defmodule Star do
     send pid, {:shutdown}
   end
   defp _sendMessages(m, pid) do
-    send pid,{"Message Id: #{m}"}
-    _sendMessages(m-1,pid)
+    if m > 0 do
+      send pid,{"Message Id: #{m}"}
+      _sendMessages(m-1,pid)
+    end
   end
 end
 
-#Star.run(5,8)
+defmodule Test do
+  def run(n,m) do
+    IO.puts "Testing with #{n} processes and #{m} messages"
+    Star.run(n,m)
+  end
+end
